@@ -17,7 +17,7 @@
                 return true;
             }
 
-            // on brute force
+            // on brute force les combinaisons possibles
             for (int i = 0; i < rapport.Length; i++)
             {
                 var rapport2 = rapport.Where((r, x) => x != i).ToArray();
