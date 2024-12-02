@@ -1,4 +1,4 @@
-﻿Day01.Solve_Part2();
+﻿Day02.Solve();
 
 static class ProgramHelper
 {
