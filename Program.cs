@@ -1,6 +1,5 @@
-﻿global using static ProgramHelper;
+﻿Day01.Solve_Part2();
 
-Day01.Solve_Part2();
 static class ProgramHelper
 {
     /// <summary>
@@ -48,9 +47,7 @@ static class ProgramHelper
     }
 }
 
-/// <summary>
-/// Helper for puzzle input.
-/// </summary>
+/// <summary>Helper for puzzle input.</summary>
 static class Input
 {
     public static string[] GetLinesArray(int day, bool sample = false) => GetLines(day, sample).ToArray();

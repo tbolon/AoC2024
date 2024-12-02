@@ -12,6 +12,7 @@
     <Content Include="*.sample.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Using Static="True" Include="ProgramHelper" />
   </ItemGroup>
 
 
