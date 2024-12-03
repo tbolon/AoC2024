@@ -1,4 +1,4 @@
-﻿Day02.Solve();
+﻿Day03.Solve();
 
 static class ProgramHelper
 {
@@ -54,6 +54,9 @@ static class Input
 
     public static IEnumerable<string> GetLines(int day, bool sample = false) => GetFile(day, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
 
+    /// <summary>
+    /// Renvoie le contenu complet de l'input du jour x.
+    /// </summary>
     public static string GetFile(int day, bool sample = false)
     {
         var filename = $"Day{day:00}.txt";
