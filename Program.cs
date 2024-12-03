@@ -1,4 +1,4 @@
-﻿Day03.Solve();
+﻿AdventOfCode2024_Day03.Solve();
 
 static class ProgramHelper
 {

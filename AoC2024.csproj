@@ -8,11 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Static="True" Include="ProgramHelper" />    
+    <Using Include="System.Text.RegularExpressions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="*.sample.txt" />
     <Content Include="*.sample.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Using Static="True" Include="ProgramHelper" />
   </ItemGroup>
 
 

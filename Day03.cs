@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-static partial class Day03
+﻿static partial class AdventOfCode2024_Day03
 {
     public static void Solve()
     {
@@ -8,19 +6,26 @@ static partial class Day03
 
         List<Token> tokens =
         [
-            .. MulRegex().Matches(input).Cast<Match>().Select(m => new Token(m.Index, TokenType.Mul, int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value))),
-            .. DoDontRegex().Matches(input).Cast<Match>().Select(m => new Token(m.Index, m.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do)),
+            .. MulRegex().Matches(input).Cast<Match>()
+                .Select(m => new Token(m.Index, TokenType.Mul, int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value))),
+            .. DoDontRegex().Matches(input).Cast<Match>()
+                .Select(m => new Token(m.Index, m.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do)),
         ];
 
-        (int score, bool _) = tokens.Order().Aggregate((score: 0, doMul: true), static (x, t) => (x.score + (x.doMul ? t.Score : 0), t.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => x.doMul }));
+        var score = tokens
+            .OrderBy(t => t.Index)
+            .Aggregate(
+                (Score: 0, DoMul: true),
+                static (x, t) => (
+                    x.Score + (x.DoMul ? t.Score : 0),
+                    t.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => x.DoMul }
+                )
+            ).Score;
 
         WriteLine(score);
     }
 
-    record Token(int Index, TokenType Type, int Score = 0) : IComparable<Token>
-    {
-        public int CompareTo(Token? other) => Index.CompareTo(other?.Index ?? 0);
-    }
+    record Token(int Index, TokenType Type, int Score = 0);
 
     enum TokenType { Mul, Do, Dont, }
 
