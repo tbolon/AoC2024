@@ -12,27 +12,14 @@ static partial class Day03
             .. DoDontRegex().Matches(input).Cast<Match>().Select(m => new Token(m.Index, m.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do)),
         ];
 
-        var score = 0;
-        var doMul = true;
-
-        foreach (var token in tokens.Order())
-        {
-            if (token.type == TokenType.Mul)
-            {
-                score += doMul ? token.score : 0;
-            }
-            else
-            {
-                doMul = token.type == TokenType.Do;
-            }
-        }
+        (int score, bool _) = tokens.Order().Aggregate((score: 0, doMul: true), static (x, t) => (x.score + (x.doMul ? t.Score : 0), t.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => x.doMul }));
 
         WriteLine(score);
     }
 
-    record Token(int index, TokenType type, int score = 0) : IComparable<Token>
+    record Token(int Index, TokenType Type, int Score = 0) : IComparable<Token>
     {
-        public int CompareTo(Token? other) => index.CompareTo((other?.index ?? 0));
+        public int CompareTo(Token? other) => Index.CompareTo(other?.Index ?? 0);
     }
 
     enum TokenType { Mul, Do, Dont, }
