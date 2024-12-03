@@ -40,10 +40,19 @@ do
         {
             var sw = Stopwatch.StartNew();
 
-            var result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+            object? result;
+            try
+            {
+                result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+            }
+            catch (Exception ex)
+            {
+                WriteException(ex);
+                result = null;
+            }
 
             // we wait at least 1 second
-            if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
+            //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
 
             if (result != null)
             {
