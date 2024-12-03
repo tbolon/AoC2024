@@ -1,7 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-
-namespace AoC2021;
+﻿namespace AoC2021;
 
 internal static class Day17
 {
