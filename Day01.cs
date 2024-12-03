@@ -3,8 +3,8 @@
     public static void Solve_Part1()
     {
         var lines = Input.GetLines(1)
-            .Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-            .Select(l => new { Left = int.Parse(l[0]), Right = int.Parse(l[1]) })
+            .Select(l => l.SplitSpace())
+            .Select(l => new { Left = l[0].AsInt(), Right = l[1].AsInt() })
             .ToArray();
 
         var left = lines.Select(l => l.Left).Order().ToArray();
@@ -15,11 +15,11 @@
         WriteLine(dist);
     }
 
-    public static void Solve_Part2()
+    public static void Solve()
     {
         var lines = Input.GetLines(1)
-            .Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-            .Select(l => new { Left = int.Parse(l[0]), Right = int.Parse(l[1]) })
+            .Select(l => l.SplitSpace())
+            .Select(l => new { Left = l[0].AsInt(), Right = l[1].AsInt() })
             .ToArray();
 
         var left = lines.Select(l => l.Left).Order().ToArray();

@@ -8,15 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Static="True" Include="ProgramHelper" />    
-    <Using Include="System.Text.RegularExpressions" />
+    <None Remove=".gitignore" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="*.sample.txt" />
-    <Content Include="*.sample.txt">
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Text.RegularExpressions" />
+    <!--<Using Include="System.Console" Static="True" />-->
+    <Using Include="Spectre.Console" />
+    <Using Include="Spectre.Console.AnsiConsole" Static="True" />
+    <Using Include="System.Console" Alias="SysConsole" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="**\*.sample.txt">
+      <DependentUpon>$([System.String]::Copy('%(FileName)').Split('.')[0]).cs</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
 
 

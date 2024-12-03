@@ -1,18 +1,18 @@
-﻿static partial class AdventOfCode2024_Day03
+﻿static partial class Day03
 {
-    public static void Solve()
+    public static int Solve(StatusContext ctx)
     {
-        var input = Input.GetFile(3);
+        var input = Input.GetInput(3);
 
         List<Token> tokens =
         [
             .. MulRegex().Matches(input).Cast<Match>()
-                .Select(m => new Token(m.Index, TokenType.Mul, int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value))),
+                .Select(m => new Token(m.Index, TokenType.Mul, m.Groups[1].Value.AsInt() * m.Groups[2].Value.AsInt())),
             .. DoDontRegex().Matches(input).Cast<Match>()
                 .Select(m => new Token(m.Index, m.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do)),
         ];
 
-        var score = tokens
+        return tokens
             .OrderBy(t => t.Index)
             .Aggregate(
                 (Score: 0, DoMul: true),
@@ -21,8 +21,6 @@
                     token.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => ctx.DoMul }
                 )
             ).Score;
-
-        WriteLine(score);
     }
 
     record Token(int Index, TokenType Type, int Score = 0);

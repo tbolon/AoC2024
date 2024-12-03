@@ -3,7 +3,7 @@
     public static void Solve()
     {
         var safeCount = Input.GetLines(2)
-            .Select(l => l.Split(' ').Select(x => int.Parse(x)).ToArray())
+            .Select(l => l.Split(' ').Select(x => x.AsInt()).ToArray())
             .Count(r => IsSafe(r));
 
         WriteLine(safeCount);

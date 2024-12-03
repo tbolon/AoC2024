@@ -1,63 +1,52 @@
-﻿AdventOfCode2024_Day03.Solve();
+﻿using System.Diagnostics;
 
-static class ProgramHelper
+SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
+
+var day = args.FirstOrDefault().AsIntN() ?? DateTime.Today.Day;
+
+var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith($"Day{day:00}")) ?? throw new NotSupportedException($"Can't find day {day}");
+var method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on Day{day:00}");
+var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
+
+
+MarkupLine($"🤖 Solving day {day}");
+
+Status().Start("🧮 Computing...", ctx =>
 {
-    /// <summary>
-    /// Checks for a condition; if the condition is false, displays a message box that shows the call stack.
-    /// </summary>
-    /// <param name="condition">The conditional expression to evaluate. If the condition is true, a failure message is not sent and the message box is not displayed.</param>
-    public static void Assert(bool condition) => System.Diagnostics.Debug.Assert(condition);
+    var sw = Stopwatch.StartNew();
+    var result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
 
-    /// <summary>
-    /// Checks for a condition; if the condition is false, outputs a specified message and displays a message box that shows the call stack.
-    /// </summary>
-    /// <param name="condition">The conditional expression to evaluate. If the condition is true, the specified message is not sent and the message box is not displayed.</param>
-    /// <param name="message">The message to display.</param>
-    public static void Assert(bool condition, string? message) => System.Diagnostics.Debug.Assert(condition, message);
-
-    public static void ReadKey(bool intercept = true) => Console.ReadKey(intercept);
-
-    public static void SetCursorPosition(int left, int top) => Console.SetCursorPosition(left, top);
-
-    public static void Clear() => Console.Clear();
-
-    public static void WriteLine(object value, ConsoleColor? color = null) => WriteLine(value?.ToString(), color);
-
-    public static void WriteLine(string? message, ConsoleColor? color = null) => Console.Write(message + Environment.NewLine, color);
-
-    public static void WriteLine() => Console.Write(Environment.NewLine);
-
-    public static void Write(object value, ConsoleColor? color = null) => Write(value?.ToString(), color);
-
-    public static void Write(string? message, ConsoleColor? color = null)
+    if (sw.ElapsedMilliseconds < 1000)
     {
-        ConsoleColor? previousColor = null;
-        if (color != null)
-        {
-            previousColor = Console.ForegroundColor;
-            Console.ForegroundColor = color.Value;
-        }
-
-        Console.Write(message);
-
-        if (previousColor != null)
-        {
-            Console.ForegroundColor = previousColor.Value;
-        }
+        Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
     }
-}
+
+    if (result != null)
+    {
+        MarkupLine($"💡 Result: [lime]{result}[/]");
+    }
+});
+
+MarkupLine("❤️ Completed");
 
 /// <summary>Helper for puzzle input.</summary>
 static class Input
 {
+    /// <summary>
+    /// Returns input splitted by lines, materialized in an array.
+    /// </summary>
     public static string[] GetLinesArray(int day, bool sample = false) => GetLines(day, sample).ToArray();
 
-    public static IEnumerable<string> GetLines(int day, bool sample = false) => GetFile(day, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
+    /// <summary>
+    /// Returns input splitted by lines.
+    /// </summary>
+    public static IEnumerable<string> GetLines(int day, bool sample = false) => GetInput(day, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
 
     /// <summary>
-    /// Renvoie le contenu complet de l'input du jour x.
+    /// Returns entire input as a single string.
+    /// input is then cached on disk.
     /// </summary>
-    public static string GetFile(int day, bool sample = false)
+    public static string GetInput(int day, bool sample = false)
     {
         var filename = $"Day{day:00}.txt";
 
@@ -94,4 +83,13 @@ static class Input
 
         return text;
     }
+}
+
+static class Extensions
+{
+    public static int? AsIntN(this string? @this) => @this == null ? null : int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+
+    public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+
+    public static string[] SplitSpace(this string @this, bool removeEmptyEntries = true) => @this.Split(' ', removeEmptyEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
 }
