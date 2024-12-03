@@ -1,62 +1,98 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
 
-var day = args.FirstOrDefault().AsIntN() ?? DateTime.Today.Day;
-
-var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith($"Day{day:00}")) ?? throw new NotSupportedException($"Can't find Day{day:00} class");
-var method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on Day{day:00}");
-var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
-
-
-MarkupLine($"🤖 Solving day {day}");
-
-Status().Start("🧮 Computing...", ctx =>
+string[] cmd = args;
+do
 {
-    var sw = Stopwatch.StartNew();
-    var result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+    var day = cmd.FirstOrDefault()?.AsInt() ?? DateTime.Today.Day;
+    var year = cmd.Skip(1).FirstOrDefault()?.AsInt() ?? DateTime.Today.Year;
+    if (year < 100) year += 2000;
 
-    if (sw.ElapsedMilliseconds < 1000)
+    MethodInfo? method = null;
+    try
     {
-        Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
+        var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
+        method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
+    }
+    catch (NotSupportedException ex)
+    {
+        MarkupLine($"[red]{ex.Message}[/]");
     }
 
-    if (result != null)
+    if (method != null)
     {
-        MarkupLine($"💡 Result: [lime]{result}[/]");
-    }
-    else
-    {
-        MarkupLine($"☠️ Method did not return any result...");
-    }
-});
+        var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
 
-MarkupLine("❤️ Completed");
+        MarkupLine($"🤖 Solving year {year} / day {day}");
+
+        Status().Start("🧮 Computing...", ctx =>
+        {
+            var sw = Stopwatch.StartNew();
+            var result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+
+            if (sw.ElapsedMilliseconds < 1000)
+            {
+                Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
+            }
+
+            if (result != null)
+            {
+                MarkupLine($"💡 Result: [lime]{result}[/]");
+            }
+            else
+            {
+                MarkupLine($"☠️ Method did not return any result...");
+            }
+        });
+    }
+
+    MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+
+    var input = SysConsole.ReadLine()?.ToLower();
+    if (input == null || input == "quit" || input == "exit") break;
+    if (input == string.Empty) input = $"{day} {year}";
+    cmd = input.Split(' ');
+} while (true);
+
+MarkupLine("❤️ See ya");
 
 /// <summary>Helper for puzzle input.</summary>
-static class Input
+static partial class Input
 {
     /// <summary>
     /// Returns input splitted by lines, materialized in an array.
     /// </summary>
-    public static string[] GetLinesArray(int day, bool sample = false) => GetLines(day, sample).ToArray();
+    public static string[] GetLinesArray([CallerFilePath] string path = "", bool sample = false) => GetLines(path, sample).ToArray();
 
     /// <summary>
     /// Returns input splitted by lines.
     /// </summary>
-    public static IEnumerable<string> GetLines(int day, bool sample = false) => GetInput(day, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
+    public static IEnumerable<string> GetLines([CallerFilePath] string path = "", bool sample = false) => GetInput(path, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
 
     /// <summary>
     /// Returns entire input as a single string.
     /// input is then cached on disk.
     /// </summary>
-    public static string GetInput(int day, bool sample = false)
+    public static string GetInput([CallerFilePath] string path = "", bool sample = false)
     {
-        var filename = $"Day{day:00}.txt";
+        // xxx\2024\Day02.cs
+        var yearAndPath = DetectYearAndDayFromPathRegex().Match(path);
+        if (!yearAndPath.Success)
+        {
+            throw new ArgumentOutOfRangeException(nameof(path), path, $"Callers should use class format [Year]/Day[DayNumber].cs");
+        }
+
+        var year = yearAndPath.Groups[1].Value.AsInt();
+        var day = yearAndPath.Groups[2].Value.AsInt();
+
+        var filename = $"{year}/Day{day:00}.txt";
 
         if (sample)
         {
-            filename = $"Day{day:00}.sample.txt";
+            filename = $"{year}/Day{day:00}.sample.txt";
             if (File.Exists(filename))
             {
                 return File.ReadAllText(filename);
@@ -87,11 +123,14 @@ static class Input
 
         return text;
     }
+
+    [GeneratedRegex(@"(\d{4})[/\\]Day(\d\d)\.cs$", RegexOptions.CultureInvariant)]
+    private static partial Regex DetectYearAndDayFromPathRegex();
 }
 
 static class Extensions
 {
-    public static int? AsIntN(this string? @this) => @this == null ? null : int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+    public static string? EmptyAsNull(this string @this) => string.IsNullOrEmpty(@this) ? null : @this;
 
     public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
 

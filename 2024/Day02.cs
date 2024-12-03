@@ -1,12 +1,14 @@
-﻿static class Day02
+﻿namespace AoC2024;
+
+static class Day02
 {
-    public static void Solve()
+    public static int Solve()
     {
-        var safeCount = Input.GetLines(2)
+        var safeCount = Input.GetLines()
             .Select(l => l.Split(' ').Select(x => x.AsInt()).ToArray())
             .Count(r => IsSafe(r));
 
-        WriteLine(safeCount);
+        return safeCount;
     }
 
     static bool IsSafe(int[] rapport)

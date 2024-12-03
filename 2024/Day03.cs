@@ -1,8 +1,10 @@
-﻿static partial class Day03
+﻿namespace AoC2024;
+
+static partial class Day03
 {
-    public static int Solve(StatusContext ctx)
+    public static int Solve()
     {
-        var input = Input.GetInput(3);
+        var input = Input.GetInput();
 
         List<Token> tokens =
         [
