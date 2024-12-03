@@ -27,7 +27,7 @@ static partial class Day03
 
     record Token(int Index, TokenType Type, int Score = 0);
 
-    enum TokenType { Mul, Do, Dont, }
+    enum TokenType { Mul, Do, Dont }
 
     [GeneratedRegex(@"mul\((\d+),(\d+)\)")]
     private static partial Regex MulRegex();

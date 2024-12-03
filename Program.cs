@@ -4,13 +4,18 @@ using System.Runtime.CompilerServices;
 
 SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
 
+// this program accepts <day> and <year> as command line parameters
+// if omitted, current day and current year will be infered from today
+
 string[] cmd = args;
+
 do
 {
     var day = cmd.FirstOrDefault()?.AsInt() ?? DateTime.Today.Day;
     var year = cmd.Skip(1).FirstOrDefault()?.AsInt() ?? DateTime.Today.Year;
-    if (year < 100) year += 2000;
+    if (year < 100) year += 2000; // we accept two last digits of year as a valid input
 
+    // find class
     MethodInfo? method = null;
     try
     {
@@ -22,21 +27,23 @@ do
         MarkupLine($"[red]{ex.Message}[/]");
     }
 
+    // if method exists, run it
     if (method != null)
     {
+        // Solve(StatusContext ctx) method is supported to return intermediate value
         var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
 
-        MarkupLine($"🤖 Solving year {year} / day {day}");
+        // let's go
+        MarkupLine($"🤖 Solving day {day} year {year}");
 
         Status().Start("🧮 Computing...", ctx =>
         {
             var sw = Stopwatch.StartNew();
+
             var result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
 
-            if (sw.ElapsedMilliseconds < 1000)
-            {
-                Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
-            }
+            // we wait at least 1 second
+            if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
 
             if (result != null)
             {
@@ -47,10 +54,15 @@ do
                 MarkupLine($"☠️ Method did not return any result...");
             }
         });
+
+        MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+    }
+    else
+    {
+        MarkupLine($"🤖 Enter <day> <year> to run a day code");
     }
 
-    MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
-
+    // parse input, exit and quit command will exit (or press Ctrl+C)
     var input = SysConsole.ReadLine()?.ToLower();
     if (input == null || input == "quit" || input == "exit") break;
     if (input == string.Empty) input = $"{day} {year}";
