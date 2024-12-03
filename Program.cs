@@ -4,7 +4,7 @@ SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
 
 var day = args.FirstOrDefault().AsIntN() ?? DateTime.Today.Day;
 
-var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith($"Day{day:00}")) ?? throw new NotSupportedException($"Can't find day {day}");
+var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Name.StartsWith($"Day{day:00}")) ?? throw new NotSupportedException($"Can't find Day{day:00} class");
 var method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on Day{day:00}");
 var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
 
@@ -24,6 +24,10 @@ Status().Start("🧮 Computing...", ctx =>
     if (result != null)
     {
         MarkupLine($"💡 Result: [lime]{result}[/]");
+    }
+    else
+    {
+        MarkupLine($"☠️ Method did not return any result...");
     }
 });
 
