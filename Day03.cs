@@ -16,9 +16,9 @@
             .OrderBy(t => t.Index)
             .Aggregate(
                 (Score: 0, DoMul: true),
-                static (x, t) => (
-                    x.Score + (x.DoMul ? t.Score : 0),
-                    t.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => x.DoMul }
+                static (ctx, token) => (
+                    ctx.Score + (ctx.DoMul ? token.Score : 0),
+                    token.Type switch { TokenType.Do => true, TokenType.Dont => false, _ => ctx.DoMul }
                 )
             ).Score;
 
