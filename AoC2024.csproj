@@ -20,6 +20,7 @@
     <!--<Using Include="System.Console" Static="True" />-->
     <Using Include="Spectre.Console" />
     <Using Include="Spectre.Console.AnsiConsole" Static="True" />
+    <Using Include="Helper" Static="True" />
     <Using Include="System.Console" Alias="SysConsole" />
   </ItemGroup>
 

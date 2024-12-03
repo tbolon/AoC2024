@@ -71,6 +71,22 @@ do
 
 MarkupLine("❤️ See ya");
 
+static class Helper
+{
+    /// <summary>
+    /// Checks for a condition; if the condition is false, displays a message box that shows the call stack.
+    /// </summary>
+    /// <param name="condition">The conditional expression to evaluate. If the condition is true, a failure message is not sent and the message box is not displayed.</param>
+    public static void Assert(bool condition) => System.Diagnostics.Debug.Assert(condition);
+
+    /// <summary>
+    /// Checks for a condition; if the condition is false, outputs a specified message and displays a message box that shows the call stack.
+    /// </summary>
+    /// <param name="condition">The conditional expression to evaluate. If the condition is true, the specified message is not sent and the message box is not displayed.</param>
+    /// <param name="message">The message to display.</param>
+    public static void Assert(bool condition, string? message) => System.Diagnostics.Debug.Assert(condition, message);
+}
+
 /// <summary>Helper for puzzle input.</summary>
 static partial class Input
 {
@@ -129,7 +145,7 @@ static partial class Input
         using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
         using var client = new HttpClient(handler);
 
-        var text = client.GetStringAsync($"https://adventofcode.com/2024/day/{day}/input").Result;
+        var text = client.GetStringAsync($"https://adventofcode.com/{year}/day/{day}/input").Result;
 
         File.WriteAllText(filename, text);
 
