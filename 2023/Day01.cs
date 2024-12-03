@@ -4,14 +4,14 @@ namespace AoC2023;
 
 static class Day01
 {
-    static string[] names = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-    static char[] digits = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    static readonly string[] names = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    static readonly char[] digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     public static int Solve()
     {
         var lines = Input.GetLines(sample: false);
-
         var sum = 0;
+        var iLine = 0;
 
         foreach (var line in lines)
         {
@@ -20,7 +20,7 @@ static class Day01
 
             for (int i = 0; i < line.Length; i++)
             {
-                var sub = line.Substring(i);
+                var sub = line[i..];
 
                 var x = digits.IndexOf(sub[0]);
                 if (x != -1)
@@ -41,8 +41,8 @@ static class Day01
             }
 
             var value = $"{left}{right}".AsInt();
-
             sum += value;
+            MarkupLine($"[cyan]{++iLine:0000}[/]: [lime]{value}[/] => [purple]{sum}[/]");
         }
 
         return sum;

@@ -2,7 +2,7 @@
 
 internal static class Day13
 {
-    public static void Part2()
+    public static void Solve()
     {
         var lines = Input.GetLines();
         var coords = lines.Where(l => !string.IsNullOrEmpty(l) && !l.StartsWith("fold along")).Select(x => x.Split(',').Select(int.Parse).ToArray());
@@ -106,8 +106,8 @@ internal static class Day13
 
     static void DrawGrid(Grid<bool> grid, bool? vertical = null, int coordinate = 0)
     {
-        Clear();
-        grid.VisitConsole(x => Write(x ? '#' : '.'));
+        SysConsole.Clear();
+        grid.VisitConsole(x => SysConsole.Write(x ? '#' : '.'));
         if (vertical != null)
         {
             if (vertical == true)
@@ -115,7 +115,7 @@ internal static class Day13
                 for (int y = 0; y < grid.Height; y++)
                 {
                     SysConsole.SetCursorPosition(coordinate, y);
-                    Write('|');
+                    SysConsole.Write('|');
                 }
             }
             else
@@ -123,9 +123,8 @@ internal static class Day13
                 for (int x = 0; x < grid.Width; x++)
                 {
                     SysConsole.SetCursorPosition(x, coordinate);
-                    Write('-');
+                    SysConsole.Write('-');
                 }
-
             }
         }
     }

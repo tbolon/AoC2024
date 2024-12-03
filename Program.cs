@@ -36,35 +36,42 @@ do
         // let's go
         MarkupLine($"🤖 Solving day {day} year {year}");
 
-        Status().Start("🧮 Computing...", ctx =>
+        if (year < 2024)
         {
-            var sw = Stopwatch.StartNew();
-
-            object? result;
-            try
+            method.Invoke(null, null);
+        }
+        else
+        {
+            Status().Start("🧮 Computing...", ctx =>
             {
-                result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
-            }
-            catch (Exception ex)
-            {
-                WriteException(ex);
-                result = null;
-            }
+                var sw = Stopwatch.StartNew();
 
-            // we wait at least 1 second
-            //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
+                object? result;
+                try
+                {
+                    result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+                }
+                catch (Exception ex)
+                {
+                    WriteException(ex);
+                    result = null;
+                }
 
-            if (result != null)
-            {
-                MarkupLine($"💡 Result: [lime]{result}[/]");
-            }
-            else
-            {
-                MarkupLine($"☠️ Method did not return any result...");
-            }
-        });
+                // we wait at least 1 second
+                //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
 
-        MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+                if (result != null)
+                {
+                    MarkupLine($"💡 Result: [lime]{result}[/]");
+                }
+                else
+                {
+                    MarkupLine($"☠️ Method did not return any result...");
+                }
+            });
+
+            MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+        }
     }
     else
     {
