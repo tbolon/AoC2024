@@ -1,49 +1,45 @@
 ﻿using System.Text.RegularExpressions;
 
-static class Day03
+static partial class Day03
 {
     public static void Solve()
     {
         var input = Input.GetFile(3);
 
-        List<Token> tokens = new();
-
-        foreach (Match match in Regex.Matches(input, @"mul\((\d+),(\d+)\)"))
-        {
-            var left = int.Parse(match.Groups[1].Value);
-            var right = int.Parse(match.Groups[2].Value);
-            tokens.Add(new Token(match.Index, TokenType.Mul, left * right));
-        }
-
-        foreach (Match match in Regex.Matches(input, @"do(n't)?\(\)"))
-        {
-            tokens.Add(new Token(match.Index, match.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do));
-        }
+        List<Token> tokens =
+        [
+            .. MulRegex().Matches(input).Cast<Match>().Select(m => new Token(m.Index, TokenType.Mul, int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value))),
+            .. DoDontRegex().Matches(input).Cast<Match>().Select(m => new Token(m.Index, m.Groups[1].Value != "" ? TokenType.Dont : TokenType.Do)),
+        ];
 
         var score = 0;
         var doMul = true;
 
-        foreach (var token in tokens.OrderBy(t => t.index))
+        foreach (var token in tokens.Order())
         {
-            if (doMul && token.type == TokenType.Mul)
+            if (token.type == TokenType.Mul)
             {
-                score += token.score;
+                score += doMul ? token.score : 0;
             }
-            else if (token.type == TokenType.Dont)
+            else
             {
-                doMul = false;
-            }
-            else if (token.type == TokenType.Do)
-            {
-                doMul = true;
+                doMul = token.type == TokenType.Do;
             }
         }
 
         WriteLine(score);
     }
 
-    record Token(int index, TokenType type, int score = 0);
+    record Token(int index, TokenType type, int score = 0) : IComparable<Token>
+    {
+        public int CompareTo(Token? other) => index.CompareTo((other?.index ?? 0));
+    }
 
     enum TokenType { Mul, Do, Dont, }
 
+    [GeneratedRegex(@"mul\((\d+),(\d+)\)")]
+    private static partial Regex MulRegex();
+
+    [GeneratedRegex(@"do(n't)?\(\)")]
+    private static partial Regex DoDontRegex();
 }
