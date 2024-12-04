@@ -98,7 +98,7 @@ static partial class Day04
 
         do
         {
-            location = location.Move(dir, 1);
+            location = location.Move(dir);
             if (!@this.Contains(location))
             {
                 return falseValue;
