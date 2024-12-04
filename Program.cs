@@ -11,8 +11,8 @@ string[] cmd = args;
 
 do
 {
-    var day = cmd.FirstOrDefault()?.AsInt() ?? DateTime.Today.Day;
-    var year = cmd.Skip(1).FirstOrDefault()?.AsInt() ?? DateTime.Today.Year;
+    var day = cmd.FirstOrDefault()?.AsIntN() ?? DateTime.Today.Day;
+    var year = cmd.Skip(1).FirstOrDefault()?.AsIntN() ?? DateTime.Today.Year;
     if (year < 100) year += 2000; // we accept two last digits of year as a valid input
 
     // find class

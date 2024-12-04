@@ -26,6 +26,25 @@ internal readonly struct Point
     public Point LeftDown => new(X - 1, Y + 1);
     public Point LeftUp => new(X - 1, Y - 1);
 
+    public Point Move(Grid8Direction dir, int offset)
+    {
+        if (offset == 0) return this;
+        if (offset < 0) { offset = -offset; dir = dir.Invert(); }
+
+        return dir switch
+        {
+            Grid8Direction.N => new(X, Y - offset),
+            Grid8Direction.NO => new(X - offset, Y - offset),
+            Grid8Direction.O => new(X - offset, Y),
+            Grid8Direction.SO => new(X - offset, Y + offset),
+            Grid8Direction.S => new(X, Y + offset),
+            Grid8Direction.SE => new(X + offset, Y + offset),
+            Grid8Direction.E => new(X + offset, Y),
+            Grid8Direction.NE => new(X + offset, Y - offset),
+            _ => throw new ArgumentOutOfRangeException(nameof(dir), dir, "Not supported")
+        };
+    }
+
     public static Point operator +(in Point p1, in Point p2) => p1.Add(p2);
     public static Point operator -(in Point p1, in Point p2) => p1.Subtract(p2);
     public static bool operator ==(in Point p1, in Point p2) => p1.X == p2.X && p1.Y == p2.Y;
@@ -71,3 +90,8 @@ internal readonly struct Point
 
     public override int GetHashCode() => HashCode.Combine(X, Y);
 }
+
+
+internal enum Grid8Direction : byte { N, O, S, E, NO, SO, SE, NE }
+
+internal enum Grid4Direction : byte { N, O, S, E }

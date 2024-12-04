@@ -4,6 +4,8 @@
 
     public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
 
+    public static int? AsIntN(this string? @this) => string.IsNullOrEmpty(@this) ? null : int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+
     public static string[] SplitSpace(this string @this, bool removeEmptyEntries = true) => @this.Split(' ', removeEmptyEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
 
     public static int IndexOf<T>(this T[] array, T value)
@@ -39,4 +41,17 @@
     public static Grid<T> AsGrid<T>(this IEnumerable<string> lines, Func<string, IEnumerable<T>> transform, T? outOfBoundsValue = default) where T : struct => new(lines.Select(l => transform(l)), outOfBoundsValue);
 
     public static IEnumerable<char> AsChars(this string @this) => @this;
+
+    public static Grid8Direction Invert(this Grid8Direction @this) => @this switch
+    {
+        Grid8Direction.N => Grid8Direction.S,
+        Grid8Direction.O => Grid8Direction.E,
+        Grid8Direction.S => Grid8Direction.N,
+        Grid8Direction.E => Grid8Direction.O,
+        Grid8Direction.NO => Grid8Direction.SE,
+        Grid8Direction.SO => Grid8Direction.NE,
+        Grid8Direction.SE => Grid8Direction.NO,
+        Grid8Direction.NE => Grid8Direction.SO,
+        _ => throw new ArgumentOutOfRangeException(nameof(@this), @this, "Not supported")
+    };
 }
