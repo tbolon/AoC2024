@@ -146,6 +146,18 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
         }
     }
 
+    public int CountMatch(Func<Point, T, bool> predicate)
+    {
+        return Visit(Match, 0);
+
+        int Match(Point p, T value, int current)
+        {
+            if (predicate(p, value))
+                return current + 1;
+            return current;
+        }
+    }
+
     public TResult Visit<TResult>(Func<Point, T, TResult, TResult> visit, TResult seed = default, Action? endOfRow = null) where TResult : struct
     {
         var result = seed;

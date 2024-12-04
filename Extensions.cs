@@ -45,13 +45,13 @@
     public static Grid8Direction Invert(this Grid8Direction @this) => @this switch
     {
         Grid8Direction.N => Grid8Direction.S,
-        Grid8Direction.O => Grid8Direction.E,
+        Grid8Direction.W => Grid8Direction.E,
         Grid8Direction.S => Grid8Direction.N,
-        Grid8Direction.E => Grid8Direction.O,
-        Grid8Direction.NO => Grid8Direction.SE,
-        Grid8Direction.SO => Grid8Direction.NE,
-        Grid8Direction.SE => Grid8Direction.NO,
-        Grid8Direction.NE => Grid8Direction.SO,
+        Grid8Direction.E => Grid8Direction.W,
+        Grid8Direction.NW => Grid8Direction.SE,
+        Grid8Direction.SW => Grid8Direction.NE,
+        Grid8Direction.SE => Grid8Direction.NW,
+        Grid8Direction.NE => Grid8Direction.SW,
         _ => throw new ArgumentOutOfRangeException(nameof(@this), @this, "Not supported")
     };
 }
