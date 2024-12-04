@@ -1,4 +1,6 @@
-﻿namespace AoC2021;
+﻿using AoC2024;
+
+namespace AoC2021;
 
 internal static class Day11
 {

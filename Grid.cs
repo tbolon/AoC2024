@@ -1,5 +1,4 @@
-﻿namespace AoC2021;
-interface IGrid
+﻿interface IGrid
 {
     bool Contains(Point p);
 }
@@ -124,13 +123,13 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
 
     /// <summary>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
-    /// Calls <see cref="Console.WriteLine"/> at the end of each row.
+    /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
     public void VisitConsole(Action<T> visit) => Visit(visit, () => WriteLine());
 
     /// <summary>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
-    /// Calls <see cref="Console.WriteLine"/> at the end of each row.
+    /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
     public void VisitConsole(Action<Point, T> visit) => Visit(visit, () => WriteLine());
 
@@ -145,6 +144,23 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
 
             endOfRow?.Invoke();
         }
+    }
+
+    public TResult Visit<TResult>(Func<Point, T, TResult, TResult> visit, TResult seed = default, Action? endOfRow = null) where TResult : struct
+    {
+        var result = seed;
+
+        for (var y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                result = visit(new Point(x, y), this[x, y], result);
+            }
+
+            endOfRow?.Invoke();
+        }
+
+        return result;
     }
 
     public void Visit(Action<Point, T> visit, Action? endOfRow = null)

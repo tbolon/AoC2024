@@ -1,6 +1,4 @@
-﻿namespace AoC2021;
-
-/// <summary>
+﻿/// <summary>
 /// Represents a point in a space where X move from left to right and Y move from top to bottom.
 /// </summary>
 internal readonly struct Point

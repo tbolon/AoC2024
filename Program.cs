@@ -171,12 +171,3 @@ static partial class Input
     [GeneratedRegex(@"(\d{4})[/\\]Day(\d\d)\.cs$", RegexOptions.CultureInvariant)]
     private static partial Regex DetectYearAndDayFromPathRegex();
 }
-
-static class Extensions
-{
-    public static string? EmptyAsNull(this string @this) => string.IsNullOrEmpty(@this) ? null : @this;
-
-    public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
-
-    public static string[] SplitSpace(this string @this, bool removeEmptyEntries = true) => @this.Split(' ', removeEmptyEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
-}
