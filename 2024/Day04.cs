@@ -8,35 +8,35 @@ static partial class Day04
 
         return grid.CountMatch(Match);
 
-        bool Match(Point p, char c)
+        bool Match(char c, Point p)
         {
             if (c != 'A')
             {
                 return false;
             }
 
-            switch (grid[p.NorthWest])
+            switch (grid[p.LeftUp])
             {
                 case 'M':
-                    if (grid[p.SouthEast] != 'S') return false;
+                    if (grid[p.RightDown] != 'S') return false;
                     break;
 
                 case 'S':
-                    if (grid[p.SouthEast] != 'M') return false;
+                    if (grid[p.RightDown] != 'M') return false;
                     break;
 
                 default:
                     return false;
             }
 
-            switch (grid[p.NorthEast])
+            switch (grid[p.RightUp])
             {
                 case 'M':
-                    if (grid[p.SouthWest] != 'S') return false;
+                    if (grid[p.LeftDown] != 'S') return false;
                     break;
 
                 case 'S':
-                    if (grid[p.SouthWest] != 'M') return false;
+                    if (grid[p.LeftDown] != 'M') return false;
                     break;
 
                 default:
@@ -51,23 +51,23 @@ static partial class Day04
     {
         var grid = Input.GetLines(sample: false).AsGridOfChars(outOfBoundsValue: '\0');
 
-        return grid.Visit(Visit, 0);
+        return grid.Aggregate(Visit, 0);
 
-        int Visit(Point p, char c, int count)
+        int Visit(int count, char c, Point p)
         {
             if (c != 'X')
             {
                 return count;
             }
 
-            count += grid.Scan(p, Grid8Direction.N, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.NW, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.W, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.SW, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.S, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.SE, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.E, ScanXmas) ? 1 : 0;
-            count += grid.Scan(p, Grid8Direction.NE, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.Up, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.LeftUp, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.Left, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.LeftDown, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.Down, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.RightDown, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.Right, ScanXmas) ? 1 : 0;
+            count += grid.Scan(p, Grid8Direction.RightUp, ScanXmas) ? 1 : 0;
 
             return count;
         }
@@ -109,6 +109,4 @@ static partial class Day04
 
         return state ?? falseValue;
     }
-
-    enum ScanState : byte { Continue, Success, Fail };
 }

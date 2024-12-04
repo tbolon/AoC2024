@@ -1,6 +1,4 @@
-﻿using AoC2024;
-
-namespace AoC2021;
+﻿namespace AoC2021;
 
 internal static class Day09
 {
@@ -12,7 +10,7 @@ internal static class Day09
         List<Point> points = new();
         foreach (var (point, value) in grid)
         {
-            if (grid[point.East] > value && grid[point.West] > value && grid[point.North] > value && grid[point.South] > value)
+            if (grid[point.Right] > value && grid[point.Left] > value && grid[point.Up] > value && grid[point.Down] > value)
             {
                 points.Add(point);
             }
@@ -36,18 +34,18 @@ internal static class Day09
     {
         var grid = Input.GetLines().AsGridOfBytes(byte.MaxValue);
 
-        var score = grid.Aggregate<int>((point, cumul, value) =>
+        var score = grid.Aggregate((int cumul, byte value, Point point) =>
         {
-            if (grid[point.East] > value
-                && grid[point.West] > value
-                && grid[point.North] > value
-                && grid[point.South] > value)
+            if (grid[point.Right] > value
+                && grid[point.Left] > value
+                && grid[point.Up] > value
+                && grid[point.Down] > value)
             {
                 return cumul + value + 1;
             }
 
             return cumul;
-        });
+        }, 0);
 
         WriteLine(score);
     }
@@ -59,6 +57,6 @@ internal static class Day09
 
         fill[point] = 1; // marquée comme visitée
 
-        return 1 + Visit(point.West, fill) + Visit(point.East, fill) + Visit(point.North, fill) + Visit(point.South, fill);
+        return 1 + Visit(point.Left, fill) + Visit(point.Right, fill) + Visit(point.Up, fill) + Visit(point.Down, fill);
     }
 }

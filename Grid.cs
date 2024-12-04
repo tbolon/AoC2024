@@ -91,89 +91,19 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
         }
     }
 
-    public T2 Aggregate<T2>(Func<Point, T2, T, T2> aggregator, in T2 seed = default) where T2 : struct
-    {
-        var value = seed;
-
-        foreach (var x in this)
-        {
-            value = aggregator(x.point, value, x.value);
-        }
-
-        return value;
-    }
-
     /// <summary>
-    /// Calls an aggregation function on each value of the grid.
+    /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
+    /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public T2 Aggregate<T2>(Func<T2, T, T2> aggregator, in T2 seed = default) where T2 : struct
-    {
-        var value = seed;
-
-        for (var y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                value = aggregator(value, this[x, y]);
-            }
-        }
-
-        return value;
-    }
+    public void VisitConsole(Action<T> visit) => Visit(visit, WriteLine);
 
     /// <summary>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
     /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public void VisitConsole(Action<T> visit) => Visit(visit, () => WriteLine());
+    public void VisitConsole(Action<Point, T> visit) => Visit(visit, WriteLine);
 
-    /// <summary>
-    /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
-    /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
-    /// </summary>
-    public void VisitConsole(Action<Point, T> visit) => Visit(visit, () => WriteLine());
-
-    public void Visit(Action<T> visit, Action? endOfRow = null)
-    {
-        for (var y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                visit(this[x, y]);
-            }
-
-            endOfRow?.Invoke();
-        }
-    }
-
-    public int CountMatch(Func<Point, T, bool> predicate)
-    {
-        return Visit(Match, 0);
-
-        int Match(Point p, T value, int current)
-        {
-            if (predicate(p, value))
-                return current + 1;
-            return current;
-        }
-    }
-
-    public TResult Visit<TResult>(Func<Point, T, TResult, TResult> visit, TResult seed = default, Action? endOfRow = null) where TResult : struct
-    {
-        var result = seed;
-
-        for (var y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                result = visit(new Point(x, y), this[x, y], result);
-            }
-
-            endOfRow?.Invoke();
-        }
-
-        return result;
-    }
+    public void Visit(Action<T> visit, Action? endOfRow = null) => Visit((p, value) => visit(value), endOfRow);
 
     public void Visit(Action<Point, T> visit, Action? endOfRow = null)
     {
@@ -186,6 +116,35 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
 
             endOfRow?.Invoke();
         }
+    }
+
+    public int CountMatch(Func<T, Point, bool> predicate)
+    {
+        return Aggregate(Match, 0);
+
+        int Match(int current, T value, Point p)
+        {
+            if (predicate(value, p))
+                return current + 1;
+            return current;
+        }
+    }
+
+    public TResult Aggregate<TResult>(Func<TResult, T, Point, TResult> visit, TResult seed = default, Action? endOfRow = null) where TResult : struct
+    {
+        var result = seed;
+
+        for (var y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                result = visit(result, this[x, y], new Point(x, y));
+            }
+
+            endOfRow?.Invoke();
+        }
+
+        return result;
     }
 
     public bool Contains(Point p) => p.X >= 0 && p.X <= XMax && p.Y >= 0 && p.Y <= YMax;

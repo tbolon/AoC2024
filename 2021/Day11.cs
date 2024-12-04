@@ -75,14 +75,14 @@ internal static class Day11
                 flashes++;
 
                 // release energy
-                IncreaseEnergy(p.East);
-                IncreaseEnergy(p.West);
-                IncreaseEnergy(p.NorthEast);
-                IncreaseEnergy(p.SouthEast);
-                IncreaseEnergy(p.NorthWest);
-                IncreaseEnergy(p.SouthWest);
-                IncreaseEnergy(p.North);
-                IncreaseEnergy(p.South);
+                IncreaseEnergy(p.Right);
+                IncreaseEnergy(p.Left);
+                IncreaseEnergy(p.RightUp);
+                IncreaseEnergy(p.RightDown);
+                IncreaseEnergy(p.LeftUp);
+                IncreaseEnergy(p.LeftDown);
+                IncreaseEnergy(p.Up);
+                IncreaseEnergy(p.Down);
             }
             else
             {

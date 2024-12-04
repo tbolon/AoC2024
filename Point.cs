@@ -17,14 +17,14 @@ internal readonly struct Point
     /// <summary>Vertical coordinate from top to bottom.</summary>
     public long Y { get; }
 
-    public Point West => new(X - 1, Y);
-    public Point East => new(X + 1, Y);
-    public Point North => new(X, Y - 1);
-    public Point South => new(X, Y + 1);
-    public Point SouthEast => new(X + 1, Y + 1);
-    public Point NorthEast => new(X + 1, Y - 1);
-    public Point SouthWest => new(X - 1, Y + 1);
-    public Point NorthWest => new(X - 1, Y - 1);
+    public Point Left => new(X - 1, Y);
+    public Point Right => new(X + 1, Y);
+    public Point Up => new(X, Y - 1);
+    public Point Down => new(X, Y + 1);
+    public Point RightDown => new(X + 1, Y + 1);
+    public Point RightUp => new(X + 1, Y - 1);
+    public Point LeftDown => new(X - 1, Y + 1);
+    public Point LeftUp => new(X - 1, Y - 1);
 
     public Point Move(Grid8Direction dir, int offset = 1)
     {
@@ -33,14 +33,14 @@ internal readonly struct Point
 
         return dir switch
         {
-            Grid8Direction.N => new(X, Y - offset),
-            Grid8Direction.NW => new(X - offset, Y - offset),
-            Grid8Direction.W => new(X - offset, Y),
-            Grid8Direction.SW => new(X - offset, Y + offset),
-            Grid8Direction.S => new(X, Y + offset),
-            Grid8Direction.SE => new(X + offset, Y + offset),
-            Grid8Direction.E => new(X + offset, Y),
-            Grid8Direction.NE => new(X + offset, Y - offset),
+            Grid8Direction.Up => new(X, Y - offset),
+            Grid8Direction.LeftUp => new(X - offset, Y - offset),
+            Grid8Direction.Left => new(X - offset, Y),
+            Grid8Direction.LeftDown => new(X - offset, Y + offset),
+            Grid8Direction.Down => new(X, Y + offset),
+            Grid8Direction.RightDown => new(X + offset, Y + offset),
+            Grid8Direction.Right => new(X + offset, Y),
+            Grid8Direction.RightUp => new(X + offset, Y - offset),
             _ => throw new ArgumentOutOfRangeException(nameof(dir), dir, "Not supported")
         };
     }
@@ -61,22 +61,22 @@ internal readonly struct Point
 
     public IEnumerable<Point> Neighbors()
     {
-        yield return North;
-        yield return West;
-        yield return South;
-        yield return East;
+        yield return Up;
+        yield return Left;
+        yield return Down;
+        yield return Right;
     }
 
     public IEnumerable<Point> Neighbors(IGrid grid)
     {
-        if (grid.Contains(North))
-            yield return North;
-        if (grid.Contains(West))
-            yield return West;
-        if (grid.Contains(South))
-            yield return South;
-        if (grid.Contains(East))
-            yield return East;
+        if (grid.Contains(Up))
+            yield return Up;
+        if (grid.Contains(Left))
+            yield return Left;
+        if (grid.Contains(Down))
+            yield return Down;
+        if (grid.Contains(Right))
+            yield return Right;
     }
 
 
@@ -92,6 +92,4 @@ internal readonly struct Point
 }
 
 
-internal enum Grid8Direction : byte { N, W, S, E, NW, SW, SE, NE }
-
-internal enum Grid4Direction : byte { N, W, S, E }
+internal enum Grid8Direction : byte { Up, Left, Down, Right, LeftUp, LeftDown, RightDown, RightUp }
