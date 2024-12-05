@@ -19,6 +19,20 @@
         return -1;
     }
 
+    public static T Middle<T>(this T[] @this)
+    {
+        Assert(@this.Length % 2 == 1);
+        return @this[@this.Length / 2];
+    }
+
+    public static T Middle<T>(this IEnumerable<T> @this)
+    {
+        Assert(@this.Count() % 2 == 1);
+        return @this.ElementAt(@this.Count() / 2);
+    }
+
+    public static TResult Transform<T, TResult>(this T[] @this, Func<T[], TResult> func) => func(@this);
+
     /// <summary>
     /// Assumes that each line is composed of the same amount of characters and returns a grid with all lines.
     /// </summary>

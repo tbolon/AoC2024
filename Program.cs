@@ -93,14 +93,9 @@ static class Helper
     /// Checks for a condition; if the condition is false, displays a message box that shows the call stack.
     /// </summary>
     /// <param name="condition">The conditional expression to evaluate. If the condition is true, a failure message is not sent and the message box is not displayed.</param>
-    public static void Assert(bool condition) => System.Diagnostics.Debug.Assert(condition);
-
-    /// <summary>
-    /// Checks for a condition; if the condition is false, outputs a specified message and displays a message box that shows the call stack.
-    /// </summary>
-    /// <param name="condition">The conditional expression to evaluate. If the condition is true, the specified message is not sent and the message box is not displayed.</param>
-    /// <param name="message">The message to display.</param>
-    public static void Assert(bool condition, string? message) => System.Diagnostics.Debug.Assert(condition, message);
+    [Conditional("DEBUG")]
+    [DebuggerStepThrough]
+    public static void Assert(bool condition, [CallerArgumentExpression(nameof(condition))] string? message = null) => System.Diagnostics.Debug.Assert(condition, message);
 }
 
 /// <summary>Helper for puzzle input.</summary>
