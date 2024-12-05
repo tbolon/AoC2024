@@ -13,39 +13,20 @@ static class Day05
 
         var score = 0;
 
-        foreach (var update in updates)
+        foreach (var update in updates.Where(u => !IsValid(u, ascRules, descRules)))
         {
-            for (int i = 0; i < update.Length; i++)
-            {
-                var page1 = update[i];
-
-                for (int j = i + 1; j < update.Length; j++)
-                {
-                    var page2 = update[j];
-
-                    if (descRules.TryGetValue(page1, out var pageRules) && pageRules.Contains(page2))
-                        goto fix;
-
-                    if (ascRules.TryGetValue(page2, out pageRules) && pageRules.Contains(page1))
-                        goto fix;
-                }
-            }
-
-            // OK: ignored
-            continue;
-
-        fix:
             MarkupLine($"[red]{string.Join(",", update)}[/]");
+
             List<int> @fixed = new(update.Length);
 
             for (int i = 0; i < update.Length; i++)
             {
-                var value = update[i];
+                var page = update[i];
 
                 if (i == 0)
                 {
-                    @fixed.Add(value);
-                    MarkupLine($"{string.Join(",", @fixed)}");
+                    @fixed.Add(page);
+                    MarkupLine($"{@fixed.StringJoin()}");
                     continue;
                 }
 
@@ -53,32 +34,27 @@ static class Day05
 
                 for (int j = 0; j < fixedCount; j++)
                 {
-                    var @fixedValue = @fixed[j];
+                    var fixedPage = @fixed[j];
 
-                    if (descRules[fixedValue].Contains(value))
+                    if (ascRules[page].Contains(fixedPage))
                     {
-                        @fixed.Insert(j, value);
-                        MarkupLine($"{string.Join(",", @fixed)} : [purple]{value}[/] < [purple]{fixedValue}[/]");
+                        @fixed.Insert(j, page);
+                        MarkupLine($"{@fixed.StringJoin()} : [lime]{page} < {fixedPage}[/]");
                         break;
                     }
-                    //else if (ascRules[fixedValue].Contains(value))
-                    //{
-                    //    MarkupLine($"[purple]{fixedValue}[/] < [purple]{value}[/]");
-                    //    @fixed.Insert(j + 1, value);
-                    //    break;
-                    //}
-                    else if (ascRules[value].Contains(fixedValue))
+                    else if (ascRules[fixedPage].Contains(page))
                     {
-                        @fixed.Insert(j, value);
-                        MarkupLine($"{string.Join(",", @fixed)} : [purple]{value}[/] < [purple]{fixedValue}[/]");
-                        break;
+                        MarkupLine($"{@fixed.StringJoin()} : [purple]{fixedPage} < {page}[/]");
                     }
-                    //else if (descRules[value].Contains(fixedValue))
-                    //{
-                    //    @fixed.Insert(j, value);
-                    //    MarkupLine($"{string.Join(",", @fixed)} : [purple]{fixedValue}[/] < [purple]{value}[/]");
-                    //    break;
-                    //}
+                    else
+                    {
+                        MarkupLine($"{@fixed.StringJoin()}");
+                    }
+                }
+
+                if (fixedCount == @fixed.Count)
+                {
+                    @fixed.Add(page);
                 }
 
                 Assert(fixedCount != @fixed.Count);
@@ -87,11 +63,11 @@ static class Day05
 
             if (!IsValid([.. @fixed], ascRules, descRules, out var broken))
             {
-                MarkupLine($"[red]{string.Join(",", @fixed)}[/] : [red]{broken.first}[/] < [red]{broken.second}[/]");
+                MarkupLine($"[red]{@fixed.StringJoin()}[/] : [red]{broken.first}[/] < [red]{broken.second}[/]");
             }
             else
             {
-                MarkupLine($"[lime]{string.Join(",", @fixed)}[/]");
+                MarkupLine($"[lime]{@fixed.StringJoin()}[/]");
                 score += @fixed.Middle();
             }
             continue;
@@ -116,11 +92,11 @@ static class Day05
             if (IsValid(update, ascRules, descRules))
             {
                 score += update.Middle();
-                MarkupLine($"[lime]{string.Join(",", update)}[/] = {update.Middle()}");
+                MarkupLine($"[lime]{update.StringJoin()}[/] = {update.Middle()}");
             }
             else
             {
-                MarkupLine($"[red]{string.Join(",", update)}[/]");
+                MarkupLine($"[red]{update.StringJoin()}[/]");
             }
         }
 
@@ -143,12 +119,6 @@ static class Day05
                 if (descRules.TryGetValue(page1, out var pageRules) && pageRules.Contains(page2))
                 {
                     broken = (page2, page1);
-                    return false;
-                }
-
-                if (ascRules.TryGetValue(page2, out pageRules) && pageRules.Contains(page1))
-                {
-                    broken = (page1, page2);
                     return false;
                 }
             }

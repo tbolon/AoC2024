@@ -8,6 +8,8 @@
 
     public static string[] SplitSpace(this string @this, bool removeEmptyEntries = true) => @this.Split(' ', removeEmptyEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
 
+    public static string StringJoin<T>(this IEnumerable<T> @this, string separator = ",") => string.Join(separator, @this);
+
     public static int IndexOf<T>(this T[] array, T value)
     {
         for (int i = 0; i < array.Length; i++)
