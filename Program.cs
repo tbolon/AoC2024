@@ -109,18 +109,18 @@ static partial class Input
     /// <summary>
     /// Returns input splitted by lines, materialized in an array.
     /// </summary>
-    public static string[] GetLinesArray([CallerFilePath] string path = "", bool sample = false) => GetLines(path, sample).ToArray();
+    public static string[] GetLinesArray(bool sample = false, [CallerFilePath] string path = "") => GetLines(sample, path).ToArray();
 
     /// <summary>
     /// Returns input splitted by lines.
     /// </summary>
-    public static IEnumerable<string> GetLines([CallerFilePath] string path = "", bool sample = false) => GetInput(path, sample).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
+    public static IEnumerable<string> GetLines(bool sample = false, [CallerFilePath] string path = "") => GetInput(sample, path).Split('\n', options: StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l));
 
     /// <summary>
     /// Returns entire input as a single string.
     /// input is then cached on disk.
     /// </summary>
-    public static string GetInput([CallerFilePath] string path = "", bool sample = false)
+    public static string GetInput(bool sample = false, [CallerFilePath] string path = "")
     {
         // xxx\2024\Day02.cs
         var yearAndPath = DetectYearAndDayFromPathRegex().Match(path);
