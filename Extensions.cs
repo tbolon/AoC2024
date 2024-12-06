@@ -38,12 +38,16 @@
     /// <summary>
     /// Assumes that each line is composed of the same amount of characters and returns a grid with all lines.
     /// </summary>
-    public static Grid<char> AsGridOfChars(this IEnumerable<string> lines, char? outOfBoundsValue = default) => new(lines, outOfBoundsValue);
+    public static Grid<char> AsGridOfChars(this IEnumerable<string> lines, char? outOfBoundsValue = default)
+    {
+        var source = (IEnumerable<IEnumerable<char>>)lines;
+        return new Grid<char>(source, outOfBoundsValue ?? '\0');
+    }
 
     /// <summary>
     /// Assumes that each line is composed of characters '0' to '9', convert them to an array of bytes and returns a grid with all lines.
     /// </summary>
-    public static Grid<byte> AsGridOfBytes(this IEnumerable<string> lines, byte? outOfBoundsValue = default) => AsGrid(lines, l => l.Select(c => (byte)(c - '0')), outOfBoundsValue);
+    public static Grid<byte> AsGridOfBytes(this IEnumerable<string> lines, byte? outOfBoundsValue = default) => AsGrid(lines, l => l.Select(c => (byte)(c - '0')), outOfBoundsValue ?? 0);
 
     /// <summary>
     /// Converts all lines to a grid, assuming the with of the grid will be based on the number of values returned by the first line.
@@ -54,13 +58,31 @@
     /// A specific value to return when out of bounds coordinates are used when calling <see cref="Grid{T}.Item(long,long)"/>.
     /// Use <see langword="null" /> to raise an <see cref="ArgumentOutOfRangeException"/> when and out of bounds index is used.
     /// </param>
-    public static Grid<T> AsGrid<T>(this IEnumerable<string> lines, Func<string, IEnumerable<T>> transform, T? outOfBoundsValue = default) where T : struct => new(lines.Select(l => transform(l)), outOfBoundsValue);
+    public static Grid<T> AsGrid<T>(this IEnumerable<string> lines, Func<string, IEnumerable<T>> transform, T? outOfBoundsValue = default) => new(lines.Select(l => transform(l)), outOfBoundsValue);
 
     public static IEnumerable<char> AsChars(this string @this) => @this;
 
-    public static void VisitConsole(this Grid<char> @this)
+    public static void VisitConsole(this Grid<char> @this) => @this.VisitConsole(c => SysConsole.Write(c));
+
+    public static void VisitConsole(this Grid<char> @this, Func<char, ConsoleColor> getColor)
     {
-        @this.VisitConsole(c => SysConsole.Write(c));
+        @this.VisitConsole(WriteChar);
+
+        void WriteChar(char c)
+        {
+            var t = SysConsole.ForegroundColor;
+            var color = getColor(c);
+            if (t != color)
+            {
+                SysConsole.ForegroundColor = color;
+                SysConsole.Write(c);
+                SysConsole.ForegroundColor = t;
+            }
+            else
+            {
+                SysConsole.Write(c);
+            }
+        }
     }
 
     public static Grid8Direction Invert(this Grid8Direction @this) => @this switch
@@ -78,11 +100,37 @@
 
     public static Grid8Direction Rotate90(this Grid8Direction @this, int count = 1)
     {
-        var x = (int)@this;
-        if (x >= 0 && x <= 3)
-            return (Grid8Direction)(((int)(@this + 4) - (count % 4)) % 4);
+        if (count > 0)
+        {
+            while (count-- != 0)
+            {
+                @this = @this switch
+                {
+                    Grid8Direction.Up => Grid8Direction.Right,
+                    Grid8Direction.Right => Grid8Direction.Down,
+                    Grid8Direction.Down => Grid8Direction.Left,
+                    Grid8Direction.Left => Grid8Direction.Up,
+                    _ => throw new NotImplementedException($"Valeur {@this} non supportée")
+                };
+            }
+        }
+        else if (count < 0)
+        {
+            while (count++ != 0)
+            {
+                @this = @this switch
+                {
+                    Grid8Direction.Up => Grid8Direction.Left,
+                    Grid8Direction.Left => Grid8Direction.Down,
+                    Grid8Direction.Down => Grid8Direction.Right,
+                    Grid8Direction.Right => Grid8Direction.Up,
+                    _ => throw new NotImplementedException($"Valeur {@this} non supportée")
+                };
+            }
+        }
 
-        throw new NotImplementedException($"Valeur {@this} non supportée");
+        return @this;
+
     }
 }
 
@@ -99,7 +147,7 @@ public class ExtensionTests
 
     [Fact]
     public void Grid8Direction_Rotate90_Basic()
-    { 
+    {
         Xunit.Assert.Equal(Grid8Direction.Up, Grid8Direction.Left.Rotate90(1));
         Xunit.Assert.Equal(Grid8Direction.Left, Grid8Direction.Down.Rotate90(1));
         Xunit.Assert.Equal(Grid8Direction.Down, Grid8Direction.Right.Rotate90(1));

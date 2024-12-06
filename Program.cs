@@ -1,5 +1,6 @@
 ﻿
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -20,12 +21,16 @@ if (args.FirstOrDefault() == "aoc")
         var year = cmd.Skip(1).FirstOrDefault()?.AsIntN() ?? DateTime.Today.Year;
         if (year < 100) year += 2000; // we accept two last digits of year as a valid input
 
+        // fancy or not?
+        var fancy = year >= 2024;
+
         // find class
         MethodInfo? method = null;
         try
         {
             var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
-            method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
+            method = classType.GetMethod("Solve", BindingFlags.Public | BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
+            fancy = fancy && method?.GetCustomAttribute<NoFancyAttribute>() == null;
         }
         catch (NotSupportedException ex)
         {
@@ -41,9 +46,19 @@ if (args.FirstOrDefault() == "aoc")
             // let's go
             MarkupLine($"🤖 Solving day {day} year {year}");
 
-            if (year < 2024)
+            object? result = null;
+
+            if (!fancy)
             {
-                method.Invoke(null, null);
+                try
+                {
+                    result = method.Invoke(null, null);
+                }
+                catch (Exception ex)
+                {
+                    WriteException(ex);
+                    result = null;
+                }
             }
             else
             {
@@ -61,21 +76,18 @@ if (args.FirstOrDefault() == "aoc")
                         WriteException(ex);
                         result = null;
                     }
-
-                    // we wait at least 1 second
-                    //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
-
-                    if (result != null)
-                    {
-                        MarkupLine($"💡 Result: [lime]{result}[/]");
-                    }
-                    else
-                    {
-                        MarkupLine($"☠️ Method did not return any result...");
-                    }
                 });
 
                 MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+            }
+
+            if (result != null)
+            {
+                MarkupLine($"💡 Result: [lime]{result}[/]");
+            }
+            else
+            {
+                MarkupLine($"☠️ Method did not return any result...");
             }
         }
         else
@@ -106,7 +118,7 @@ static class Helper
     /// <param name="condition">The conditional expression to evaluate. If the condition is true, a failure message is not sent and the message box is not displayed.</param>
     [Conditional("DEBUG")]
     [DebuggerStepThrough]
-    public static void Assert(bool condition, [CallerArgumentExpression(nameof(condition))] string? message = null) => System.Diagnostics.Debug.Assert(condition, message);
+    public static void Assert(bool condition, [CallerArgumentExpression(nameof(condition))] string? message = null) => Debug.Assert(condition, message);
 }
 
 /// <summary>Helper for puzzle input.</summary>
@@ -177,3 +189,6 @@ static partial class Input
     [GeneratedRegex(@"(\d{4})[/\\]Day(\d\d)\.cs$", RegexOptions.CultureInvariant)]
     private static partial Regex DetectYearAndDayFromPathRegex();
 }
+
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class NoFancyAttribute : Attribute { }

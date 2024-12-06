@@ -92,4 +92,16 @@ internal readonly struct Point
 }
 
 
-internal enum Grid8Direction : byte { Up, Left, Down, Right, LeftUp, LeftDown, RightDown, RightUp }
+[Flags]
+internal enum Grid8Direction : byte
+{
+    Undefined = 0,
+    Up = 1,
+    Left = 2,
+    Down = 4,
+    Right = 8,
+    LeftUp = Left | Up,
+    LeftDown = Left | Down,
+    RightDown = Right | Down,
+    RightUp = Right | Up
+}

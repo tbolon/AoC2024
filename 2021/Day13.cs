@@ -1,6 +1,4 @@
-﻿using AoC2024;
-
-namespace AoC2021;
+﻿namespace AoC2021;
 
 internal static class Day13
 {
@@ -103,7 +101,7 @@ internal static class Day13
             break; // part 1
         }
 
-        WriteLine(grid.Sum(x => x.value ? 1 : 0));
+        WriteLine(grid.Sum(x => x.Value ? 1 : 0));
     }
 
     static void DrawGrid(Grid<bool> grid, bool? vertical = null, int coordinate = 0)

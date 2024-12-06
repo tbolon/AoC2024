@@ -6,7 +6,7 @@
 /// <summary>
 /// Represents a grid where values are organized in multiple rows in vertical order from top to bottom, and where each row is constituted of values ordered from left to right.
 /// </summary>
-class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
+class Grid<T> : IGrid, IEnumerable<GridCell<T>>
 {
     private readonly T[] _data;
     private readonly T? _outOfBoundsValue;
@@ -21,7 +21,7 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
         if (initialValue != null)
         {
             for (int i = 0; i < _data.Length; i++)
-                _data[i] = initialValue.Value;
+                _data[i] = initialValue;
         }
     }
 
@@ -80,7 +80,7 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
         }
     }
 
-    public IEnumerator<(Point point, T value)> GetEnumerator()
+    public IEnumerator<GridCell<T>> GetEnumerator()
     {
         for (var y = 0; y < Height; y++)
         {
@@ -118,6 +118,28 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
         }
     }
 
+    public void ForEach(Func<GridCell<T>, T> func)
+    {
+        for (var y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                this[x, y] = func(new GridCell<T>(new Point(x, y), this[x, y]));
+            }
+        }
+    }
+
+    public void ForEach(Action<GridCell<T>> action)
+    {
+        for (var y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                action(new GridCell<T>(new Point(x, y), this[x, y]));
+            }
+        }
+    }
+
     public int CountMatch(Func<T, Point, bool> predicate)
     {
         return Aggregate(Match, 0);
@@ -152,15 +174,42 @@ class Grid<T> : IGrid, IEnumerable<(Point point, T value)> where T : struct
     /// <summary>
     /// Effectue une copie de cette grille, en transformant chaque élément.
     /// </summary>
-    public Grid<T2> Copy<T2>(Func<Point, T, T2> transform) where T2 : struct
+    public Grid<T2> Copy<T2>(Func<Point, T, T2> transform)
     {
         var result = new Grid<T2>(Width, Height);
         foreach (var (point, value) in this)
         {
             result[point] = transform(point, value);
         }
+
+        return result;
+    }
+    /// <summary>
+    /// Effectue une copie de cette grille
+    /// </summary>
+    public Grid<T> Copy()
+    {
+        var result = new Grid<T>(Width, Height);
+        foreach (var (point, value) in this)
+        {
+            result[point] = value;
+        }
+
         return result;
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+internal record struct GridCell<T>(Point Point, T Value)
+{
+    public static implicit operator (Point point, T value)(GridCell<T> value)
+    {
+        return (value.Point, value.Value);
+    }
+
+    public static implicit operator GridCell<T>((Point point, T value) value)
+    {
+        return new GridCell<T>(value.point, value.value);
+    }
 }
