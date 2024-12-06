@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -7,85 +8,95 @@ SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
 // this program accepts <day> and <year> as command line parameters
 // if omitted, current day and current year will be infered from today
 
-string[] cmd = args;
-
-do
+if (args.FirstOrDefault() == "aoc")
 {
-    var day = cmd.FirstOrDefault()?.AsIntN() ?? DateTime.Today.Day;
-    var year = cmd.Skip(1).FirstOrDefault()?.AsIntN() ?? DateTime.Today.Year;
-    if (year < 100) year += 2000; // we accept two last digits of year as a valid input
+    args = args.Skip(1).ToArray();
 
-    // find class
-    MethodInfo? method = null;
-    try
+    string[] cmd = args;
+
+    do
     {
-        var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
-        method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
-    }
-    catch (NotSupportedException ex)
-    {
-        MarkupLine($"[red]{ex.Message}[/]");
-    }
+        var day = cmd.FirstOrDefault()?.AsIntN() ?? DateTime.Today.Day;
+        var year = cmd.Skip(1).FirstOrDefault()?.AsIntN() ?? DateTime.Today.Year;
+        if (year < 100) year += 2000; // we accept two last digits of year as a valid input
 
-    // if method exists, run it
-    if (method != null)
-    {
-        // Solve(StatusContext ctx) method is supported to return intermediate value
-        var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
-
-        // let's go
-        MarkupLine($"🤖 Solving day {day} year {year}");
-
-        if (year < 2024)
+        // find class
+        MethodInfo? method = null;
+        try
         {
-            method.Invoke(null, null);
+            var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
+            method = classType.GetMethod("Solve", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
+        }
+        catch (NotSupportedException ex)
+        {
+            MarkupLine($"[red]{ex.Message}[/]");
+        }
+
+        // if method exists, run it
+        if (method != null)
+        {
+            // Solve(StatusContext ctx) method is supported to return intermediate value
+            var passCtx = method.GetParameters()?.FirstOrDefault(p => p.ParameterType == typeof(StatusContext)) != null;
+
+            // let's go
+            MarkupLine($"🤖 Solving day {day} year {year}");
+
+            if (year < 2024)
+            {
+                method.Invoke(null, null);
+            }
+            else
+            {
+                Status().Start("🧮 Computing...", ctx =>
+                {
+                    var sw = Stopwatch.StartNew();
+
+                    object? result;
+                    try
+                    {
+                        result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteException(ex);
+                        result = null;
+                    }
+
+                    // we wait at least 1 second
+                    //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
+
+                    if (result != null)
+                    {
+                        MarkupLine($"💡 Result: [lime]{result}[/]");
+                    }
+                    else
+                    {
+                        MarkupLine($"☠️ Method did not return any result...");
+                    }
+                });
+
+                MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+            }
         }
         else
         {
-            Status().Start("🧮 Computing...", ctx =>
-            {
-                var sw = Stopwatch.StartNew();
-
-                object? result;
-                try
-                {
-                    result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
-                }
-                catch (Exception ex)
-                {
-                    WriteException(ex);
-                    result = null;
-                }
-
-                // we wait at least 1 second
-                //if (sw.ElapsedMilliseconds < 1000) Thread.Sleep(1000 - (int)sw.ElapsedMilliseconds);
-
-                if (result != null)
-                {
-                    MarkupLine($"💡 Result: [lime]{result}[/]");
-                }
-                else
-                {
-                    MarkupLine($"☠️ Method did not return any result...");
-                }
-            });
-
-            MarkupLine($"🤖 Computing completed, press Enter to rerun the last command, or enter <day> <year>");
+            MarkupLine($"🤖 Enter <day> <year> to run a day code");
         }
-    }
-    else
-    {
-        MarkupLine($"🤖 Enter <day> <year> to run a day code");
-    }
 
-    // parse input, exit and quit command will exit (or press Ctrl+C)
-    var input = SysConsole.ReadLine()?.ToLower();
-    if (input == null || input == "quit" || input == "exit") break;
-    if (input == string.Empty) input = $"{day} {year}";
-    cmd = input.Split(' ');
-} while (true);
+        // parse input, exit and quit command will exit (or press Ctrl+C)
+        var input = SysConsole.ReadLine()?.ToLower();
+        if (input == null || input == "quit" || input == "exit") break;
+        if (input == string.Empty) input = $"{day} {year}";
+        cmd = input.Split(' ');
+    } while (true);
 
-MarkupLine("❤️ See ya");
+    MarkupLine("❤️ See ya");
+    return 0;
+}
+else
+{
+    return global::Xunit.Runner.InProc.SystemConsole.ConsoleRunner.Run(args).GetAwaiter().GetResult();
+}
 
 static class Helper
 {
