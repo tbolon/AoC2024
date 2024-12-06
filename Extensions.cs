@@ -58,6 +58,11 @@
 
     public static IEnumerable<char> AsChars(this string @this) => @this;
 
+    public static void VisitConsole(this Grid<char> @this)
+    {
+        @this.VisitConsole(c => SysConsole.Write(c));
+    }
+
     public static Grid8Direction Invert(this Grid8Direction @this) => @this switch
     {
         Grid8Direction.Up => Grid8Direction.Down,
