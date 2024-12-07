@@ -5,101 +5,107 @@ static class Day07
     [NoFancy]
     public static ulong Solve()
     {
-        var sample = false;
-        var formulas = Input.GetLines(sample: sample).Select(x => x.Split(':').Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])));
+        var formulas = Input
+            .GetLines(sample: false)
+            .Select(x => x.Split(':')
+            .Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])))
+            .ToList();
 
         ulong score = 0;
 
-        foreach ((long result, int[] values) in formulas)
+        Progress().Start(ctx =>
         {
-            MarkupLine($"[cyan]{result}[/]: [cyan]{string.Join("[/] [cyan]", values)}[/]");
-            var opl = values.Length - 1;
-            var mask = (int)Math.Pow(3, opl);
-
-            for (int i = 0; i < mask; i++)
+            var task = ctx.AddTask("🤖 Solving", maxValue: formulas.Count);
+            foreach ((long result, int[] values) in formulas)
             {
-                var base3 = DecimalToArbitrarySystem(i, 3).PadLeft(opl, '0');
+                task.Increment(1);
 
-                long computed = 0;
+                // nombre d'opérations
+                var opl = values.Length - 1;
 
+                // génère une table combinatoire avec toutes les valeurs possibles sur une base 3
+                var combTable = GetCombTable(opl, 3);
 
-                computed = values[0];
+                long computed;
 
-                for (int j = 0; j <= opl - 1; j++)
+                // parcours de la table des combinaisons
+                for (var i = 0; i < combTable.Length; i++)
                 {
-                    var value = (long)values[j + 1];
-                    var op = base3[j];
-                    if (op == '0')
+                    // opérations à exécuter pour cette combinaison
+                    var ops = combTable[i];
+
+                    // calcul
+                    computed = values[0];
+                    for (int j = 0; j < opl; j++)
                     {
-                        computed *= value;
-                    }
-                    else if (op == '1')
-                    {
-                        computed += value;
-                    }
-                    else
-                    {
-                        computed = long.Parse(computed.ToString() + value.ToString(), System.Globalization.NumberStyles.None);
+                        var value = (long)values[j + 1];
+                        computed = ops[j] switch
+                        {
+                            0 => computed * value,
+                            1 => computed + value,
+                            2 => long.Parse(computed.ToString() + value.ToString(), System.Globalization.NumberStyles.None),
+                            _ => throw new NotSupportedException()
+                        };
+
+                        // short-circuit si le nombre dépasse la valeur recherchée en cours de route
+                        if (computed > result)
+                        {
+                            break;
+                        }
                     }
 
-                    if (computed > result)
+                    if (computed == result)
                     {
+                        score += (ulong)result;
                         break;
                     }
                 }
-
-                if (computed == result)
-                {
-                    score += (ulong)result;
-                    break;
-                }
             }
-
-            //SysConsole.ReadKey();
-        }
+        });
 
         return score;
     }
 
-    /// <summary>
-    /// Converts the given decimal number to the numeral system with the
-    /// specified radix (in the range [2, 36]).
-    /// </summary>
-    /// <param name="decimalNumber">The number to convert.</param>
-    /// <param name="radix">The radix of the destination numeral system
-    /// (in the range [2, 36]).</param>
-    /// <returns></returns>
-    public static string DecimalToArbitrarySystem(long decimalNumber, int radix)
+    static readonly Dictionary<byte, Dictionary<int, byte[][]>> _cache = [];
+
+    static byte[][] GetCombTable(int length, byte radix)
     {
-        const int BitsInLong = 64;
-        const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if (!_cache.TryGetValue(radix, out var table))
+            _cache[radix] = table = [];
 
-        if (radix < 2 || radix > Digits.Length)
-            throw new ArgumentException("The radix must be >= 2 and <= " +
-                Digits.Length.ToString());
+        if (!table.TryGetValue(length, out var combTable))
+            table[length] = combTable = CreateCombTable(length, radix);
 
-        if (decimalNumber == 0)
-            return "0";
+        return combTable;
+    }
 
-        int index = BitsInLong - 1;
-        long currentNumber = Math.Abs(decimalNumber);
-        char[] charArray = new char[BitsInLong];
+    /// <summary>
+    /// Créé une table avec toutes les combinaisons de valeurs possibles pour une base donnée.
+    /// </summary>
+    static byte[][] CreateCombTable(int length, byte radix)
+    {
+        var max = (int)Math.Pow(radix, length);
+        var result = new byte[max][];
 
-        while (currentNumber != 0)
+        for (int i = 0; i < max; i++)
         {
-            int remainder = (int)(currentNumber % radix);
-            charArray[index--] = Digits[remainder];
-            currentNumber = currentNumber / radix;
-        }
+            var comb = new byte[length];
+            var rank = length - 1;
 
-        string result = new String(charArray, index + 1, BitsInLong - index - 1);
-        if (decimalNumber < 0)
-        {
-            result = "-" + result;
+            var val = i;
+            while (val > 0)
+            {
+                var rem = val % radix;
+                comb[rank--] = (byte)rem;
+                val /= radix;
+            }
+
+            result[i] = comb;
         }
 
         return result;
     }
+
 
     [NoFancy]
     public static ulong Solve_Part1()
