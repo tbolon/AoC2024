@@ -9,6 +9,18 @@ static class Day07
     public static ulong Solve()
     {
         var sample = false;
+        var formulas = Input.GetLines(sample: sample).Select(x => x.Split(':').Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])));
+
+        foreach ((long result, int[] values) in formulas)
+        {
+
+        }
+    }
+
+    [NoFancy]
+    public static ulong Solve_Part1()
+    {
+        var sample = false;
         var output = false;
         var formulas = Input.GetLines(sample: sample).Select(x => x.Split(':').Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])));
 
@@ -61,7 +73,7 @@ static class Day07
 
                     if (computed > result)
                     {
-                        //break;
+                        break;
                     }
                 }
 
