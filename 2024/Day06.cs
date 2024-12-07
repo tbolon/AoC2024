@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-namespace AoC2024;
+﻿namespace AoC2024;
 
 static class Day06
 {

@@ -66,7 +66,6 @@ if (args.FirstOrDefault() == "aoc")
                 {
                     var sw = Stopwatch.StartNew();
 
-                    object? result;
                     try
                     {
                         result = method.Invoke(null, passCtx ? new object[] { ctx } : null);
