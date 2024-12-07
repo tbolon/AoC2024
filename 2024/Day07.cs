@@ -89,10 +89,9 @@ static class Day07
 
         for (int i = 0; i < max; i++)
         {
+            var val = i;
             var comb = new byte[length];
             var rank = length - 1;
-
-            var val = i;
             while (val > 0)
             {
                 var rem = val % radix;
