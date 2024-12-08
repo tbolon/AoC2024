@@ -1,6 +1,5 @@
-﻿
+﻿using BenchmarkDotNet.Running;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -8,6 +7,11 @@ SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
 
 // this program accepts <day> and <year> as command line parameters
 // if omitted, current day and current year will be infered from today
+
+if (args.FirstOrDefault() == "bench")
+{
+    BenchmarkRunner.Run<AoC2024.Day07.Bench>();
+}
 
 if (args.FirstOrDefault() == "aoc")
 {

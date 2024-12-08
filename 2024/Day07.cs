@@ -1,24 +1,46 @@
-﻿namespace AoC2024;
+﻿using BenchmarkDotNet.Attributes;
 
-static class Day07
+namespace AoC2024;
+
+public static class Day07
 {
     [NoFancy]
-    public static ulong Solve()
+    public static long Solve() => Solve_Iteratif(LoadFormulas());
+
+    [MemoryDiagnoser]
+    public class Bench
     {
-        var formulas = Input
+        private readonly List<(long result, int[] values)> _formulas;
+        public Bench()
+        {
+            _formulas = LoadFormulas();
+        }
+
+        [Benchmark]
+        public long Iteratif() => Day07.Solve_Iteratif(_formulas);
+
+        [Benchmark]
+        public long Recursif() => Day07.Solve_Recursive(_formulas);
+    }
+
+
+    private static List<(long result, int[] values)> LoadFormulas() => Input
             .GetLines(sample: false)
             .Select(x => x.Split(':')
             .Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])))
             .ToList();
 
-        ulong score = 0;
 
-        Progress().Start(ctx =>
+    public static long Solve_Iteratif(List<(long result, int[] values)> formulas)
+    {
+        long score = 0;
+
+        //Progress().Start(ctx =>
         {
-            var task = ctx.AddTask("🤖 Solving", maxValue: formulas.Count);
+            //var task = ctx.AddTask("🤖 Solving", maxValue: formulas.Count);
             foreach ((long result, int[] values) in formulas)
             {
-                task.Increment(1);
+                //task.Increment(1);
 
                 // nombre d'opérations
                 var opl = values.Length - 1;
@@ -56,12 +78,13 @@ static class Day07
 
                     if (computed == result)
                     {
-                        score += (ulong)result;
+                        score += result;
                         break;
                     }
                 }
             }
-        });
+        }
+        //);
 
         return score;
     }
@@ -104,6 +127,53 @@ static class Day07
 
         return result;
     }
+
+    /// <summary>
+    /// Méthode récursive.
+    /// </summary>
+    public static long Solve_Recursive(List<(long result, int[] values)> formulas)
+    {
+        long score = 0;
+
+        //Progress().Start(ctx =>
+        {
+            //var task = ctx.AddTask("🤖 Solving", maxValue: formulas.Count);
+            foreach ((long result, int[] values) in formulas)
+            {
+                //task.Increment(1);
+                if (Calc(0, values, result, 0xff))
+                    score += result;
+            }
+        }
+        //);
+
+        return score;
+    }
+
+    private static bool Calc(long left, IEnumerable<int> values, long result, byte op)
+    {
+        var right = values.First();
+
+        var next = op switch
+        {
+            0 => left * right,
+            1 => left + right,
+            2 => long.Parse(left.ToString() + right.ToString(), System.Globalization.NumberStyles.None),
+            0xff => left,
+            _ => throw new NotSupportedException()
+        };
+
+        if (next > result) return false;
+
+        if (op != 0xff) values = values.Skip(1);
+
+        if (!values.Any()) return next == result;
+
+        return Calc(next, values, result, 0)
+            || Calc(next, values, result, 1)
+            || Calc(next, values, result, 2);
+    }
+
 
 
     [NoFancy]
