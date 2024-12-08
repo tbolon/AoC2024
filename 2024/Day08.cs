@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Xunit;
-
-namespace AoC2024;
+﻿namespace AoC2024;
 
 static class Day08
 {
