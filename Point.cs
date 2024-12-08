@@ -51,6 +51,9 @@ internal readonly struct Point
     public static bool operator !=(in Point p1, in Point p2) => p1.X != p2.X || p1.Y != p2.Y;
 
     public Point Add(in Point other) => new(X + other.X, Y + other.Y);
+
+    public Point Add(long x, long y) => new(X + x, Y + y);
+
     public Point Subtract(in Point other) => new(X - other.X, Y - other.Y);
 
     public void Deconstruct(out long x, out long y)
