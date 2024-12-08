@@ -1,5 +1,16 @@
 ﻿static class Extensions
 {
+    public static IEnumerable<(T1 First, T2 Second)> CrossJoin<T1, T2>(this IEnumerable<T1> @this, IEnumerable<T2> other)
+    {
+        foreach(var first in @this)
+        {
+            foreach(var second in other)
+            {
+                yield return (first, second);
+            }
+        }
+    }
+
     public static string? EmptyAsNull(this string @this) => string.IsNullOrEmpty(@this) ? null : @this;
 
     public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);

@@ -1,29 +1,24 @@
-﻿namespace AoC2024;
+﻿using System.Collections.Generic;
+using Xunit;
+
+namespace AoC2024;
 
 static class Day08
 {
     public static int Solve()
     {
         var grid = Input.GetLines(false).AsGridOfChars();
-        var antennas = grid.Where(c => c.Value != '.').GroupBy(c => c.Value, c => c.Point).ToDictionary(g => g.Key, g => g.ToArray());
+        var antennas = grid.Where(c => c.Value != '.').GroupBy(c => c.Value, c => c.Point).Select(g => g.ToArray());
         HashSet<Point> antinotes = [];
 
-        foreach (var group in antennas)
+        foreach (var freqAnts in antennas)
         {
-            var freq = group.Key;
-            var freqAnts = group.Value;
-            for (var i = 0; i < freqAnts.Length; i++)
+            foreach (var (first, second) in freqAnts.CrossJoin(freqAnts).Where(x => x.First != x.Second))
             {
-                var first = freqAnts[i];
-                for (var j = 0; j < freqAnts.Length; j++)
+                var offset = second - first;
+                for (var p2 = second; grid.Contains(p2); p2 = p2 += offset)
                 {
-                    if (i == j) continue;
-                    var second = freqAnts[j];
-                    var offset = second - first;
-                    for (var p2 = second; grid.Contains(p2); p2 = p2 += offset)
-                    {
-                        antinotes.Add(p2);
-                    }
+                    antinotes.Add(p2);
                 }
             }
         }
