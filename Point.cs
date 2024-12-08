@@ -46,6 +46,7 @@ internal readonly struct Point
     }
 
     public static Point operator +(in Point p1, in Point p2) => p1.Add(p2);
+    public static Point operator +(in Point p1, in (long x, long y) p2) => p1.Add(p2.x, p2.y);
     public static Point operator -(in Point p1, in Point p2) => p1.Subtract(p2);
     public static bool operator ==(in Point p1, in Point p2) => p1.X == p2.X && p1.Y == p2.Y;
     public static bool operator !=(in Point p1, in Point p2) => p1.X != p2.X || p1.Y != p2.Y;
