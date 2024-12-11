@@ -32,7 +32,10 @@ public static partial class Input
         var year = yearAndPath.Groups[1].Value.AsInt();
         var day = yearAndPath.Groups[2].Value.AsInt();
 
+        if (!Directory.Exists(year.ToString()))
+            Directory.CreateDirectory(year.ToString());
         var filename = $"{year}/Day{day:00}.txt";
+        
 
         if (sample)
         {

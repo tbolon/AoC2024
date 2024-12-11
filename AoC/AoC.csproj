@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Using Include="AoC" />
-    <Using Include="AoC.Helper" Static="True" />
     <Using Include="Spectre.Console" />
     <Using Include="Spectre.Console.AnsiConsole" Static="True" />
     <Using Include="System.Console" Alias="SysConsole" />

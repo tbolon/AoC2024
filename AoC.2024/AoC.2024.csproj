@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>AoC2024</RootNamespace>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -10,8 +11,6 @@
   <ItemGroup>
     <Using Include="AoC" />
     <Using Include="AoC.Helper" Static="True" />
-    <Using Include="Spectre.Console" />
-    <Using Include="Spectre.Console.AnsiConsole" Static="True" />
     <Using Include="System.Console" Alias="SysConsole" />
     <Using Include="System.Text.RegularExpressions" />
   </ItemGroup>

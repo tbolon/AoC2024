@@ -105,7 +105,7 @@ internal static class Day15
             }
             else
             {
-                SysConsole.Write(((char)(x + '0')).ToString(), ConsoleColor.Green);
+                Write(((char)(x + '0')).ToString(), ConsoleColor.Green);
             }
         });
 
@@ -172,16 +172,16 @@ internal static class Day15
 
         SysConsole.ReadKey();
 
-        Clear();
+        SysConsole.Clear();
         grid.VisitConsole((p, x) =>
         {
             if (!path.Contains(p))
             {
-                Write((char)(x + '0'));
+                SysConsole.Write((char)(x + '0'));
             }
             else
             {
-                SysConsole.Write('o'.ToString(), ConsoleColor.Green);
+                Write('o'.ToString(), ConsoleColor.Green);
             }
         });
 
