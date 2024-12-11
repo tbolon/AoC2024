@@ -14,12 +14,11 @@ public static class Day11
         var nextStones = new Dictionary<long, long>();        
 
         stones.AddRange(Input.GetInput(sample: false).Split(' ').Select(x => long.Parse(x)).GroupBy(x => x).Select(x => (x.Key, (long)x.Count())));
+            MarkupLine($"Generation [purple]{0}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
 
         for (var i = 0; i < 75; i++)
         {
-            MarkupLine($"Generation [purple]{i}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
-            //if (i < 6) WriteLine(string.Join(' ', stones));
-
+            if (i < 6) MarkupLine(string.Join(' ', stones.Select(p => $"[[[purple]{p.Key}[/]x[lime]{p.Value}[/]]]")));
             nextStones.Clear();
             foreach ((var number, var count) in stones)
             {
@@ -30,6 +29,7 @@ public static class Day11
             }
 
             (nextStones, stones) = (stones, nextStones);
+            MarkupLine($"Generation [purple]{i+1}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
         }
 
         return stones.Values.Sum();
