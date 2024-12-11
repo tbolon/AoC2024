@@ -8,13 +8,15 @@ public static class Day11
 
     public static long Solve()
     {
+        // key: valeur sur la pierre
+        // value: nb de pierres avec cette valeur
         var stones = Input.GetInput(sample: false).Split(' ').Select(x => long.Parse(x)).GroupBy(x => x).ToDictionary(x => x.Key, x => (long)x.Count()).ToSortedDictionary();
 
         WriteLine(string.Join(' ', stones));
 
         for (var i = 0; i < 75; i++)
         {
-            WriteLine($"Generation {i} : {stones.Values.Sum()} ({stones.Count} slots)");
+            MarkupLine($"Generation [purple]{i}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
             if (i < 6) WriteLine(string.Join(' ', stones));
 
             var nextStones = new SortedDictionary<long, long>();
@@ -34,6 +36,8 @@ public static class Day11
 
     private static (long left, long? right) Blink(long stone)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(stone);
+
         // case 1 : si 0 alors 1
         if (stone == 0)
             return (1, null);
@@ -101,6 +105,10 @@ public static class Day11
 
     private static int CountDigits(long value)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+
+        if (value < 10) return 1;
+
         var digits = 1;
         while (value / 10 > 0)
         {
