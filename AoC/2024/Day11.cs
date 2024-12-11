@@ -11,10 +11,10 @@ public static class Day11
         // key: valeur sur la pierre
         // value: nb de pierres avec cette valeur
         var stones = new Dictionary<long, long>();
-        var nextStones = new Dictionary<long, long>();        
+        var nextStones = new Dictionary<long, long>();
 
         stones.AddRange(Input.GetInput(sample: false).Split(' ').Select(x => long.Parse(x)).GroupBy(x => x).Select(x => (x.Key, (long)x.Count())));
-            MarkupLine($"Generation [purple]{0}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
+        MarkupLine($"Generation [purple]{0}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
 
         for (var i = 0; i < 75; i++)
         {
@@ -29,7 +29,7 @@ public static class Day11
             }
 
             (nextStones, stones) = (stones, nextStones);
-            MarkupLine($"Generation [purple]{i+1}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
+            MarkupLine($"Generation [purple]{i + 1}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
         }
 
         return stones.Values.Sum();
@@ -40,14 +40,11 @@ public static class Day11
         ArgumentOutOfRangeException.ThrowIfNegative(stone);
 
         // case 1 : si 0 alors 1
-        if (stone == 0)
-            return (1, null);
+        if (stone == 0) return (1, null);
 
-        var digits = CountDigits(stone);
-
-        // cas 3 : si nb impair, on multiple par 2024
-        if (digits % 2 != 0)
-            return (stone * 2024, null);
+        // cas 3 : si nb de chiffres impair, on multiple par 2024
+        var digits = DigitCount(stone);
+        if (digits % 2 != 0) return (stone * 2024, null);
 
         // cas 2 : si nb pair, on renvoie 2 nombres avec la moitié gauche et droite
         var divider = (int)Math.Pow(10, digits / 2);
@@ -74,7 +71,7 @@ public static class Day11
                 }
                 else
                 {
-                    var digits = CountDigits(stone);
+                    var digits = DigitCount(stone);
                     if (digits % 2 == 0)
                     {
                         var divider = (int)Math.Pow(10, digits / 2);
@@ -104,14 +101,12 @@ public static class Day11
         return stones.Count;
     }
 
-    private static int CountDigits(long value)
+    private static int DigitCount(long value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
-
-        if (value < 10) return 1;
-
+        if (value < 10) return 1; // shortcut
         var digits = 1;
-        while (value / 10 > 0)
+        while (value / 10 != 0)
         {
             digits++;
             value /= 10;
