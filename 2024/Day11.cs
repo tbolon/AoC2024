@@ -26,10 +26,8 @@ public static class Day11
             // nombre de pierres rangées par nombre
             var nextGen = new SortedDictionary<long, long>();
 
-            foreach (var group in stones.GroupBy(x => x.Key))
+            foreach ((var number, var count) in stones)
             {
-                var number = group.Key;
-                var count = group.Sum(x => x.Value);
                 (var nextLeft, var nextRight) = Blink(number);
                 nextGen.Incr(nextLeft, count);
                 if (nextRight != null)
