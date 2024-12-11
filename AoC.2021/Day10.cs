@@ -181,10 +181,6 @@ public static class Day10
                 {
                     yield return Append(next);
                 }
-                else
-                {
-                    // TODO
-                }
             }
         }
 
