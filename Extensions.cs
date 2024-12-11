@@ -1,13 +1,32 @@
-﻿static class Extensions
+﻿using System.Numerics;
+
+static class Extensions
 {
     public static IEnumerable<(T1 First, T2 Second)> CrossJoin<T1, T2>(this IEnumerable<T1> @this, IEnumerable<T2> other)
     {
-        foreach(var first in @this)
+        foreach (var first in @this)
         {
-            foreach(var second in other)
+            foreach (var second in other)
             {
                 yield return (first, second);
             }
+        }
+    }
+
+    public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull
+    {
+        return new SortedDictionary<TKey, TValue>(source);
+    }
+
+    public static void Incr<TKey, TValue>(this IDictionary<TKey, TValue> @this, TKey key, TValue value) where TKey : notnull where TValue : INumber<TValue>
+    {
+        if (@this.TryGetValue(key, out var existing))
+        {
+            @this[key] = existing + value;
+        }
+        else
+        {
+            @this[key] = value;
         }
     }
 
