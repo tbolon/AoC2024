@@ -51,6 +51,7 @@ if (args.FirstOrDefault() == "aoc")
             MarkupLine($"🤖 Solving day {day} year {year}");
 
             object? result = null;
+            var sw = Stopwatch.StartNew();
 
             if (!fancy)
             {
@@ -86,7 +87,7 @@ if (args.FirstOrDefault() == "aoc")
 
             if (result != null)
             {
-                MarkupLine($"💡 Result: [lime]{result}[/]");
+                MarkupLine($"💡 Result: [lime]{result}[/] (in {sw.Elapsed.TotalSeconds:n1}s)");
             }
             else
             {
