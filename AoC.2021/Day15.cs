@@ -71,7 +71,7 @@ public static class Day15
 
                 // si le nouveau point n'a jamais été exploré, ou que le cout pour y arriver est plus faible
                 // alors ce point est intéressant et doit être conservé
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                if (!costSoFar.TryGetValue(next, out int cost) || newCost < cost)
                 {
                     // on stocke le cout jusqu'au point
                     costSoFar[next] = newCost;
@@ -147,7 +147,7 @@ public static class Day15
             {
                 var newCost = costSoFar[current] + grid[current];
 
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                if (!costSoFar.TryGetValue(next, out int cost) || newCost < cost)
                 {
                     costSoFar[next] = newCost;
                     var priority = newCost;
