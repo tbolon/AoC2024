@@ -1,6 +1,6 @@
 ﻿namespace AoC2024;
 
-static class Day01
+public static class Day01
 {
     public static int Solve_Part1()
     {

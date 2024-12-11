@@ -1,6 +1,6 @@
 ﻿namespace AoC2021;
 
-internal static class Day10
+public static class Day10
 {
     public static void Part2()
     {

@@ -1,5 +1,6 @@
 ﻿namespace AoC2024;
-static class Day09
+
+public static class Day09
 {
     private const string charMap = @"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 

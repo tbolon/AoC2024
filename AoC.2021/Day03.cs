@@ -1,6 +1,6 @@
 ﻿namespace AoC2021;
 
-internal static class Day03
+public static class Day03
 {
     public static int Solve()
     {

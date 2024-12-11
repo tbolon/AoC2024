@@ -1,6 +1,6 @@
 ﻿namespace AoC2021;
 
-internal static class Day12
+public static class Day12
 {
     public static void Part2_Alt()
     {
