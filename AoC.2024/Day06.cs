@@ -12,8 +12,7 @@ public static class Day06
 
         // build path, get all points where the guard was
         BuildPath(grid);
-        //ConsoleWriteGrid(grid);
-        //SysConsole.ReadKey();
+        ConsoleWriteGrid(grid);
 
         var pathPoints = grid.Where(x => x.Value == 'X' && x.Point != start).Select(x => x.Point).ToList();
         WriteLine($"Points.Count = {pathPoints.Count}");
@@ -48,12 +47,6 @@ public static class Day06
         }
 
         return count;
-    }
-
-    private static void ResetGrid(Grid<char> grid, Point start)
-    {
-        grid.ForEach(c => c.Value switch { 'X' or '|' or '-' or 'O' or '+' => '.', _ => c.Value });
-        grid[start] = '^';
     }
 
     private static void ConsoleWriteGrid(Grid<char> grid)

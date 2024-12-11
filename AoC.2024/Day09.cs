@@ -137,7 +137,7 @@ public static class Day09
 
                 freeBlocks.Add(i);
                 freeBlocks.Sort();
-                //WriteDisk(disk);
+                WriteDisk_Part1(disk);
             }
         }
 
@@ -164,6 +164,7 @@ public static class Day09
             else
                 Write(x % charMap.Length);
         }
+
         WriteLine();
     }
 }

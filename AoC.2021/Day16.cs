@@ -185,19 +185,8 @@ public static class Day16
         long Solve();
     }
 
-    class OperationPacket : IPacket
+    class OperationPacket(int version, OperationPacketType type, List<IPacket> args) : IPacket
     {
-        private readonly OperationPacketType type;
-        private readonly List<IPacket> args;
-        private readonly int version;
-
-        public OperationPacket(int version, OperationPacketType type, List<IPacket> args)
-        {
-            this.version = version;
-            this.type = type;
-            this.args = args;
-        }
-
         public int Version => version + args.Sum(a => a.Version);
 
         public long Solve() => type switch
@@ -213,17 +202,9 @@ public static class Day16
         };
     }
 
-    class LiteralPacket : IPacket
+    class LiteralPacket(int version, long value) : IPacket
     {
-        private readonly long value;
-
-        public LiteralPacket(int version, long value)
-        {
-            Version = version;
-            this.value = value;
-        }
-
-        public int Version { get; }
+        public int Version { get; } = version;
 
         public long Solve() => value;
     }

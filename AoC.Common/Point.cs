@@ -3,21 +3,15 @@
 /// <summary>
 /// Represents a point in a space where X move from left to right and Y move from top to bottom.
 /// </summary>
-public readonly struct Point
+public readonly struct Point(in long x, in long y)
 {
     public static readonly Point Empty = new(0, 0);
 
-    public Point(in long x, in long y)
-    {
-        X = x;
-        Y = y;
-    }
-
     /// <summary>Horizontal coordinate from left to right.</summary>
-    public long X { get; }
+    public long X { get; } = x;
 
     /// <summary>Vertical coordinate from top to bottom.</summary>
-    public long Y { get; }
+    public long Y { get; } = y;
 
     public Point Left => new(X - 1, Y);
     public Point Right => new(X + 1, Y);

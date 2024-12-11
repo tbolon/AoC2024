@@ -13,7 +13,7 @@ public static class Day05
 
         var score = 0;
 
-        foreach (var update in updates.Where(u => !IsValid(u, ascRules, descRules)))
+        foreach (var update in updates.Where(u => !IsValid(u, descRules)))
         {
             MarkupLine($"[red]{string.Join(",", update)}[/]");
 
@@ -61,7 +61,7 @@ public static class Day05
 
             }
 
-            if (!IsValid([.. @fixed], ascRules, descRules, out var broken))
+            if (!IsValid([.. @fixed], descRules, out var broken))
             {
                 MarkupLine($"[red]{@fixed.StringJoin()}[/] : [red]{broken.first}[/] < [red]{broken.second}[/]");
             }
@@ -82,14 +82,13 @@ public static class Day05
         var rules = lines.TakeWhile(x => x.Contains('|')).Select(l => l.Split('|').Transform(x => new { First = x[0].AsInt(), Second = x[1].AsInt() })).ToArray();
         var updates = lines.Skip(rules.Length).Select(r => r.Split(',').Select(r => r.AsInt()).ToArray()).ToArray();
 
-        var ascRules = rules.GroupBy(x => x.First, x => x.Second).ToDictionary(x => x.Key, y => y.ToHashSet());
         var descRules = rules.GroupBy(x => x.Second, x => x.First).ToDictionary(x => x.Key, y => y.ToHashSet());
 
         var score = 0;
 
         foreach (var update in updates)
         {
-            if (IsValid(update, ascRules, descRules))
+            if (IsValid(update, descRules))
             {
                 score += update.Middle();
                 MarkupLine($"[lime]{update.StringJoin()}[/] = {update.Middle()}");
@@ -103,10 +102,10 @@ public static class Day05
         return score;
     }
 
-    private static bool IsValid(int[] update, Dictionary<int, HashSet<int>> ascRules, Dictionary<int, HashSet<int>> descRules)
-        => IsValid(update, ascRules, descRules, out _);
+    private static bool IsValid(int[] update, Dictionary<int, HashSet<int>> descRules)
+        => IsValid(update, descRules, out _);
 
-    private static bool IsValid(int[] update, Dictionary<int, HashSet<int>> ascRules, Dictionary<int, HashSet<int>> descRules, out (int first, int second) broken)
+    private static bool IsValid(int[] update, Dictionary<int, HashSet<int>> descRules, out (int first, int second) broken)
     {
         for (int i = 0; i < update.Length; i++)
         {
