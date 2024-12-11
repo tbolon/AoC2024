@@ -36,9 +36,9 @@ public static class Day03
                 var count0 = eligibles.Count - count1;
 
                 if (count1 >= count0)
-                    eligibles = eligibles.Where(e => values[e][i] == (majority ? 1 : 0)).ToList();
+                    eligibles = [.. eligibles.Where(e => values[e][i] == (majority ? 1 : 0))];
                 else if (count1 < count0)
-                    eligibles = eligibles.Where(e => values[e][i] == (majority ? 0 : 1)).ToList();
+                    eligibles = [.. eligibles.Where(e => values[e][i] == (majority ? 0 : 1))];
             }
 
             Assert(eligibles.Count == 1, eligibles.Count.ToString());

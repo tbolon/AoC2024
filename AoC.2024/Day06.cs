@@ -176,9 +176,9 @@ public static class Day06
 
     private record Cell
     {
-        public static Cell NewBlock() => new Cell(16);
-        public static Cell NewObstacle() => new Cell(16 | 64);
-        public static Cell NewStart() => new Cell(32 | 1);
+        public static Cell NewBlock() => new(16);
+        public static Cell NewObstacle() => new(16 | 64);
+        public static Cell NewStart() => new(32 | 1);
 
         private byte _value;
 

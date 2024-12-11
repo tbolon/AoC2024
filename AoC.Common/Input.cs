@@ -9,7 +9,7 @@ public static partial class Input
     /// <summary>
     /// Returns input splitted by lines, materialized in an array.
     /// </summary>
-    public static string[] GetLinesArray(bool sample = false, [CallerFilePath] string path = "") => GetLines(sample, path).ToArray();
+    public static string[] GetLinesArray(bool sample = false, [CallerFilePath] string path = "") => [.. GetLines(sample, path)];
 
     /// <summary>
     /// Returns input splitted by lines.

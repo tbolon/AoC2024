@@ -27,7 +27,7 @@ public static class Day08
     {
         var grid = Input.GetLines(false).AsGridOfChars();
 
-        HashSet<Point> antinotes = new();
+        HashSet<Point> antinotes = [];
 
         var antennas = grid.Where(c => c.Value != '.').GroupBy(c => c.Value, c => c.Point).ToDictionary(g => g.Key, g => g.ToArray());
 

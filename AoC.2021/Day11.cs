@@ -90,7 +90,7 @@ public static class Day11
     }
     public static void Part1()
     {
-        byte[][] octopuses = Input.GetLines(sample: false).Select(l => l.Select(x => x).Select(x => (byte)(x - '0')).ToArray()).ToArray();
+        byte[][] octopuses = [.. Input.GetLines(sample: false).Select(l => l.Select(x => x).Select(x => (byte)(x - '0')).ToArray())];
         var height = octopuses.Length;
         var width = octopuses[0].Length;
         var flashes = 0;

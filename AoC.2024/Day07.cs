@@ -5,11 +5,10 @@ public static class Day07
     [NoFancy]
     public static long Solve() => Solve_Iteratif(LoadFormulas());
 
-    public static List<(long result, int[] values)> LoadFormulas() => Input
+    public static List<(long result, int[] values)> LoadFormulas() => [.. Input
             .GetLines(sample: false)
             .Select(x => x.Split(':')
-            .Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])))
-            .ToList();
+            .Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])))];
 
 
     public static long Solve_Iteratif(List<(long result, int[] values)> formulas)

@@ -42,14 +42,13 @@ public static class Day16
         }
     }
 
-    private static byte[][] ReadInput(bool sample = false) => Input
+    private static byte[][] ReadInput(bool sample = false) => [.. Input
         .GetLines(sample: sample)
         .Select(l => l
             .Chunk(2)
             .Select(c => new string(c))
             .Select(s => byte.Parse(s, System.Globalization.NumberStyles.HexNumber))
-            .ToArray())
-        .ToArray();
+            .ToArray())];
 
     private static IPacket ReadPacket(byte[] frame, ref int i)
     {

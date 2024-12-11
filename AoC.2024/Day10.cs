@@ -10,7 +10,7 @@ public static class Day10
 
         var base0 = grid.Where(x => x.Value == '0');
 
-        return base0.Sum(c => Hike(c.Point, c.Value, new List<Point>()));
+        return base0.Sum(c => Hike(c.Point, c.Value, []));
 
         int Hike(Point p, char expected, List<Point> pikes)
         {
@@ -46,7 +46,7 @@ public static class Day10
 
         var base0 = grid.Where(x => x.Value == '0');
 
-        return base0.Sum(c => Hike(c.Point, c.Value, new HashSet<Point>()));
+        return base0.Sum(c => Hike(c.Point, c.Value, []));
 
         int Hike(Point p, char expected, HashSet<Point> pikes)
         {

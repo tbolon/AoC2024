@@ -43,7 +43,7 @@ public sealed class Grid<T> : IGrid, IEnumerable<GridCell<T>>
             Height++;
         }
 
-        _data = tempItems.ToArray();
+        _data = [.. tempItems];
     }
 
     /// <summary>Gets the width of the grid.</summary>

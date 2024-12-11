@@ -9,7 +9,7 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 // this program accepts <day> and <year> as command line parameters
 // if omitted, current day and current year will be infered from today
 
-args = args.Skip(1).ToArray();
+args = [.. args.Skip(1)];
 
 string[] cmd = args;
 

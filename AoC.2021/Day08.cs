@@ -176,7 +176,7 @@ public static class Day08
         }
 
         // fix des caractères affichés
-        var fixedDisplays = line.displays.Select(d => new string(d.Select(c => swapFix[c - 'a']).ToArray())).Select(SortChars).ToArray();
+        var fixedDisplays = line.displays.Select(d => new string([.. d.Select(c => swapFix[c - 'a'])])).Select(SortChars).ToArray();
 
         // construction du nombre
         var result = 0L;
@@ -196,6 +196,6 @@ public static class Day08
 
     private static string SortChars(string value)
     {
-        return new string(value.OrderBy(c => c).ToArray());
+        return new string([.. value.OrderBy(c => c)]);
     }
 }
