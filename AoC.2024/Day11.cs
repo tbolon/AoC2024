@@ -2,10 +2,6 @@ namespace AoC2024;
 
 public static class Day11
 {
-    record StoneGen(long Number, int Generation);
-
-    record StoneResult(long Left, long? Right);
-
     public static long Solve()
     {
         // key: valeur sur la pierre
