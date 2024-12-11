@@ -13,12 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="AoC" />
-    <Using Include="Spectre.Console" />
-    <Using Include="Spectre.Console.AnsiConsole" Static="True" />
-    <Using Include="System.Console" Alias="SysConsole" />
-    <Using Include="System.Text.RegularExpressions" />
-
     <InternalsVisibleTo Include="AoC.Tests" />
   </ItemGroup>
 

@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using AoC;
+using Spectre.Console;
+using System.Diagnostics;
 using System.Reflection;
+using static AoC.DebugConsole;
 
-SysConsole.OutputEncoding = System.Text.Encoding.UTF8;
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 // this program accepts <day> and <year> as command line parameters
 // if omitted, current day and current year will be infered from today
@@ -53,13 +56,13 @@ do
             }
             catch (Exception ex)
             {
-                WriteException(ex);
+                AnsiConsole.WriteException(ex);
                 result = null;
             }
         }
         else
         {
-            Status().Start("🧮 Computing...", ctx =>
+            AnsiConsole.Status().Start("🧮 Computing...", ctx =>
             {
                 var sw = Stopwatch.StartNew();
 
@@ -69,7 +72,7 @@ do
                 }
                 catch (Exception ex)
                 {
-                    WriteException(ex);
+                    AnsiConsole.WriteException(ex);
                     result = null;
                 }
             });
@@ -92,7 +95,7 @@ do
     }
 
     // parse input, exit and quit command will exit (or press Ctrl+C)
-    var input = SysConsole.ReadLine()?.ToLower();
+    var input = Console.ReadLine()?.ToLower();
     if (input == null || input == "quit" || input == "exit") break;
     if (input == string.Empty) input = $"{day} {year}";
     cmd = input.Split(' ');

@@ -101,7 +101,7 @@ public static class Day15
         {
             if (!path.Contains(p))
             {
-                SysConsole.Write((char)(x + '0'));
+                Write((char)(x + '0'));
             }
             else
             {
@@ -109,7 +109,7 @@ public static class Day15
             }
         });
 
-        SysConsole.WriteLine(path.Sum(p => p == start ? 0 : grid[p]));
+        WriteLine(path.Sum(p => p == start ? 0 : grid[p]));
     }
 
     public static void Part1()
@@ -168,16 +168,16 @@ public static class Day15
         path.Add(start);
         path.Reverse();
 
-        grid.VisitConsole(x => SysConsole.Write((char)(x + '0')));
+        grid.VisitConsole(x => Write((char)(x + '0')));
 
-        SysConsole.ReadKey();
+        //SysConsole.ReadKey();
 
-        SysConsole.Clear();
+        Clear();
         grid.VisitConsole((p, x) =>
         {
             if (!path.Contains(p))
             {
-                SysConsole.Write((char)(x + '0'));
+                Write((char)(x + '0'));
             }
             else
             {

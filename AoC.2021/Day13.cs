@@ -106,24 +106,24 @@ public static class Day13
 
     static void DrawGrid(Grid<bool> grid, bool? vertical = null, int coordinate = 0)
     {
-        SysConsole.Clear();
-        grid.VisitConsole(x => SysConsole.Write(x ? '#' : '.'));
+        Clear();
+        grid.VisitConsole(x => Write(x ? '#' : '.'));
         if (vertical != null)
         {
             if (vertical == true)
             {
                 for (int y = 0; y < grid.Height; y++)
                 {
-                    SysConsole.SetCursorPosition(coordinate, y);
-                    SysConsole.Write('|');
+                    Console.SetCursorPosition(coordinate, y);
+                    Console.Write('|');
                 }
             }
             else
             {
                 for (int x = 0; x < grid.Width; x++)
                 {
-                    SysConsole.SetCursorPosition(x, coordinate);
-                    SysConsole.Write('-');
+                    Console.SetCursorPosition(x, coordinate);
+                    Console.Write('-');
                 }
             }
         }

@@ -9,8 +9,7 @@
 
   <ItemGroup>
     <Using Include="AoC" />
-    <Using Include="AoC.Helper" Static="True" />
-    <Using Include="System.Console" Alias="SysConsole" />
+    <Using Include="AoC.DebugConsole" Static="True" />
     <Using Include="System.Text.RegularExpressions" />
   </ItemGroup>
 

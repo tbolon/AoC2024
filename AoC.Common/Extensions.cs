@@ -17,9 +17,9 @@ public static class Extensions
 
     public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull => new SortedDictionary<TKey, TValue>(source);
 
-    public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> @this, IEnumerable<(TKey first, TValue second)> values) where TKey : notnull 
+    public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> @this, IEnumerable<(TKey first, TValue second)> values) where TKey : notnull
     {
-        foreach((var first, var second) in values)
+        foreach ((var first, var second) in values)
         {
             @this.Add(first, second);
         }
@@ -97,28 +97,9 @@ public static class Extensions
 
     public static IEnumerable<char> AsChars(this string @this) => @this;
 
-    public static void VisitConsole(this Grid<char> @this) => @this.VisitConsole(c => SysConsole.Write(c));
+    public static void VisitConsole(this Grid<char> @this) => @this.VisitConsole(c => Write(c));
 
-    public static void VisitConsole(this Grid<char> @this, Func<char, ConsoleColor> getColor)
-    {
-        @this.VisitConsole(WriteChar);
-
-        void WriteChar(char c)
-        {
-            var t = SysConsole.ForegroundColor;
-            var color = getColor(c);
-            if (t != color)
-            {
-                SysConsole.ForegroundColor = color;
-                SysConsole.Write(c);
-                SysConsole.ForegroundColor = t;
-            }
-            else
-            {
-                SysConsole.Write(c);
-            }
-        }
-    }
+    public static void VisitConsole(this Grid<char> @this, Func<char, ConsoleColor> getColor) => @this.VisitConsole(c => Write(c, getColor(c)));
 
     public static Grid8Direction Invert(this Grid8Direction @this) => @this switch
     {

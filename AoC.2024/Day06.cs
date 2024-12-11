@@ -41,8 +41,7 @@ public static class Day06
             count += isLoop ? 1 : 0;
 
             ConsoleWriteGrid(cellGrid);
-            SysConsole.WriteLine(isLoop);
-            SysConsole.ReadKey();
+            WriteLine(isLoop);
 
             previous = obstacle;
 
@@ -59,8 +58,8 @@ public static class Day06
 
     private static void ConsoleWriteGrid(Grid<char> grid)
     {
-        SysConsole.Clear();
-        SysConsole.WriteLine(new string('=', (int)grid.Width));
+        Clear();
+        WriteLine(new string('=', (int)grid.Width));
         grid.VisitConsole(c => c switch
         {
             'X' => ConsoleColor.Green,
@@ -70,13 +69,13 @@ public static class Day06
             '*' => ConsoleColor.Red,
             _ => ConsoleColor.White
         });
-        SysConsole.WriteLine(new string('=', (int)grid.Width));
+        WriteLine(new string('=', (int)grid.Width));
     }
 
     private static void ConsoleWriteGrid(Grid<Cell> grid)
     {
-        SysConsole.Clear();
-        SysConsole.WriteLine(new string('=', (int)grid.Width));
+        Clear();
+        WriteLine(new string('=', (int)grid.Width));
         grid.VisitConsole(c =>
         {
             var color = c switch
@@ -88,19 +87,9 @@ public static class Day06
                 _ => ConsoleColor.White
             };
 
-            var t = SysConsole.ForegroundColor;
-            if (t != color)
-            {
-                SysConsole.ForegroundColor = color;
-                SysConsole.Write(c.ToString());
-                SysConsole.ForegroundColor = t;
-            }
-            else
-            {
-                SysConsole.Write(c);
-            }
-        });
-        SysConsole.WriteLine(new string('=', (int)grid.Width));
+            Write(c.ToString(), color);
+        });        
+        WriteLine(new string('=', (int)grid.Width));
     }
 
     /// <summary>

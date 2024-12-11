@@ -98,13 +98,13 @@ public sealed class Grid<T> : IGrid, IEnumerable<GridCell<T>>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
     /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public void VisitConsole(Action<T> visit) => Visit(visit, SysConsole.WriteLine);
+    public void VisitConsole(Action<T> visit) => Visit(visit, () => WriteLine());
 
     /// <summary>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
     /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public void VisitConsole(Action<Point, T> visit) => Visit(visit, SysConsole.WriteLine);
+    public void VisitConsole(Action<Point, T> visit) => Visit(visit, () => WriteLine());
 
     public void Visit(Action<T> visit, Action? endOfRow = null) => Visit((p, value) => visit(value), endOfRow);
 

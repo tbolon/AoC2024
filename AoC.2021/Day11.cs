@@ -9,7 +9,6 @@ public static class Day11
         var octopus = Input.GetLines(sample: false).AsGridOfBytes(OOB);
         var flashes = 0;
         var stepFlashes = 0;
-        var defaultColor = SysConsole.ForegroundColor;
         var step = 1;
 
         DrawGrid();
@@ -43,7 +42,7 @@ public static class Day11
 
         void DrawGrid()
         {
-            SysConsole.SetCursorPosition(0, 0);
+            SetCursorPosition(0, 0);
             octopus.VisitConsole(v =>
             {
                 if (v == FLASHING) Write("X", ConsoleColor.Green);
@@ -96,7 +95,6 @@ public static class Day11
         var width = octopuses[0].Length;
         var flashes = 0;
         var stepFlashes = 0;
-        var defaultColor = SysConsole.ForegroundColor;
 
         for (int i = 0; i < 100; i++)
         {

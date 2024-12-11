@@ -70,20 +70,20 @@ public static class Day09
         {
             while (i < index)
             {
-                SysConsole.Write('.');
+                Write('.');
                 i++;
             }
 
             while (i < index + size)
             {
-                SysConsole.Write(fileId % charMap.Length);
+                Write(fileId % charMap.Length);
                 i++;
             }
 
             fi++;
         }
 
-        SysConsole.WriteLine();
+        WriteLine();
     }
 
     public static long Solve_Part1()
@@ -160,10 +160,10 @@ public static class Day09
         {
             var x = disk[i];
             if (x == -1)
-                SysConsole.Write('.');
+                Write('.');
             else
-                SysConsole.Write(x % charMap.Length);
+                Write(x % charMap.Length);
         }
-        SysConsole.WriteLine();
+        WriteLine();
     }
 }
