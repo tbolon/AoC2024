@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Analysers;
-
-namespace AoC2024;
+﻿namespace AoC2024;
 
 static class Day10
 {

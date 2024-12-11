@@ -97,7 +97,7 @@ internal readonly struct Point
 
 
 [Flags]
-internal enum Grid8Direction : byte
+public enum Grid8Direction : byte
 {
     Undefined = 0,
     Up = 1,

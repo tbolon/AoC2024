@@ -1,30 +1,11 @@
-﻿using BenchmarkDotNet.Attributes;
-
-namespace AoC2024;
+﻿namespace AoC2024;
 
 public static class Day07
 {
     [NoFancy]
     public static long Solve() => Solve_Iteratif(LoadFormulas());
 
-    [MemoryDiagnoser]
-    public class Bench
-    {
-        private readonly List<(long result, int[] values)> _formulas;
-        public Bench()
-        {
-            _formulas = LoadFormulas();
-        }
-
-        [Benchmark]
-        public long Iteratif() => Day07.Solve_Iteratif(_formulas);
-
-        [Benchmark]
-        public long Recursif() => Day07.Solve_Recursive(_formulas);
-    }
-
-
-    private static List<(long result, int[] values)> LoadFormulas() => Input
+    public static List<(long result, int[] values)> LoadFormulas() => Input
             .GetLines(sample: false)
             .Select(x => x.Split(':')
             .Transform<string, (long, int[])>(x => (long.Parse(x[0]), [.. x[1].Trim().Split(' ').Select(r => int.Parse(r))])))
