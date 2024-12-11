@@ -1,6 +1,4 @@
-﻿using AoC2021;
-
-namespace AoC2023;
+﻿namespace AoC2023;
 
 static class Day01
 {

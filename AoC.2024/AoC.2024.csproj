@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace></RootNamespace>
-    <OutputType>Exe</OutputType>
+    <RootNamespace>AoC2024</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <Using Include="AoC" />
@@ -19,14 +14,11 @@
     <Using Include="Spectre.Console.AnsiConsole" Static="True" />
     <Using Include="System.Console" Alias="SysConsole" />
     <Using Include="System.Text.RegularExpressions" />
-
-    <InternalsVisibleTo Include="AoC.Tests" />
   </ItemGroup>
 
+
   <ItemGroup>
-    <ProjectReference Include="..\AoC.2021\AoC.2021.csproj" />
-    <ProjectReference Include="..\AoC.2023\AoC.2023.csproj" />
-    <ProjectReference Include="..\AoC.2024\AoC.2024.csproj" />
+    <ProjectReference Include="..\AoC.Common\AoC.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +27,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 
 </Project>

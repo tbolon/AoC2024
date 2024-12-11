@@ -23,7 +23,8 @@ do
     MethodInfo? method = null;
     try
     {
-        var classType = typeof(Program).Assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
+        var assembly = Assembly.Load($"AoC.{year}") ?? throw new NotSupportedException($"Can't load AoC.{year} assembly");
+        var classType = assembly.GetTypes().FirstOrDefault(t => t.Namespace == $"AoC{year}" && t.Name == $"Day{day:00}") ?? throw new NotSupportedException($"Can't find class AoC{year}.Day{day:00}");
         method = classType.GetMethod("Solve", BindingFlags.Public | BindingFlags.Static) ?? throw new NotSupportedException($"Can't find method Solve() on AoC{year}.Day{day:00}");
         fancy = fancy && method?.GetCustomAttribute<NoFancyAttribute>() == null;
     }
