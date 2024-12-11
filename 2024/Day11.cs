@@ -1,6 +1,3 @@
-using System.Collections.Immutable;
-using System.Xml.Linq;
-
 namespace AoC2024;
 
 public static class Day11
@@ -18,37 +15,36 @@ public static class Day11
         for (var i = 0; i < 75; i++)
         {
             WriteLine($"Generation {i} : {stones.Values.Sum()} ({stones.Count} slots)");
-            if (i < 6)
-            {
-                WriteLine(string.Join(' ', stones));
-            }
+            if (i < 6) WriteLine(string.Join(' ', stones));
 
-            // nombre de pierres rangées par nombre
-            var nextGen = new SortedDictionary<long, long>();
-
+            var nextStones = new SortedDictionary<long, long>();
             foreach ((var number, var count) in stones)
             {
-                (var nextLeft, var nextRight) = Blink(number);
-                nextGen.Incr(nextLeft, count);
-                if (nextRight != null)
-                    nextGen.Incr(nextRight.Value, count);
+                (var left, var right) = Blink(number);
+                nextStones.AddOrIncrement(left, count);
+                if (right != null)
+                    nextStones.AddOrIncrement(right.Value, count);
             }
 
-            stones = nextGen;
+            stones = nextStones;
         }
 
         return stones.Values.Sum();
     }
 
-    private static (long First, long? Second) Blink(long stone)
+    private static (long left, long? right) Blink(long stone)
     {
+        // case 1 : si 0 alors 1
         if (stone == 0)
             return (1, null);
 
         var digits = CountDigits(stone);
+
+        // cas 3 : si nb impair, on multiple par 2024
         if (digits % 2 != 0)
             return (stone * 2024, null);
 
+        // cas 2 : si nb pair, on renvoie 2 nombres avec la moitié gauche et droite
         var divider = (int)Math.Pow(10, digits / 2);
         var left = stone / divider;
         var right = stone % divider;

@@ -13,21 +13,16 @@ static class Extensions
         }
     }
 
-    public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull
-    {
-        return new SortedDictionary<TKey, TValue>(source);
-    }
+    public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull => new SortedDictionary<TKey, TValue>(source);
 
-    public static void Incr<TKey, TValue>(this IDictionary<TKey, TValue> @this, TKey key, TValue value) where TKey : notnull where TValue : INumber<TValue>
+    public static IDictionary<TKey, TValue> AddOrIncrement<TKey, TValue>(this IDictionary<TKey, TValue> @this, TKey key, TValue value) where TKey : notnull where TValue : INumber<TValue>
     {
         if (@this.TryGetValue(key, out var existing))
-        {
             @this[key] = existing + value;
-        }
         else
-        {
             @this[key] = value;
-        }
+
+        return @this;
     }
 
     public static string? EmptyAsNull(this string @this) => string.IsNullOrEmpty(@this) ? null : @this;
