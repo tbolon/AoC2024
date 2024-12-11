@@ -15,6 +15,14 @@ static class Extensions
 
     public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IDictionary<TKey, TValue> source) where TKey : notnull => new SortedDictionary<TKey, TValue>(source);
 
+    public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> @this, IEnumerable<(TKey first, TValue second)> values) where TKey : notnull 
+    {
+        foreach((var first, var second) in values)
+        {
+            @this.Add(first, second);
+        }
+    }
+
     public static IDictionary<TKey, TValue> AddOrIncrement<TKey, TValue>(this IDictionary<TKey, TValue> @this, TKey key, TValue value) where TKey : notnull where TValue : INumber<TValue>
     {
         if (@this.TryGetValue(key, out var existing))

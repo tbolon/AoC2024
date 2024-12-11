@@ -87,7 +87,7 @@ if (args.FirstOrDefault() == "aoc")
 
             if (result != null)
             {
-                MarkupLine($"💡 Result: [lime]{result}[/] (in {sw.Elapsed.TotalSeconds:n1}s)");
+                MarkupLine($"💡 Result: [lime]{result}[/] (in {sw.Elapsed.TotalSeconds:n2}s)");
             }
             else
             {

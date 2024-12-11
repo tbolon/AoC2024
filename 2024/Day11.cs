@@ -10,16 +10,17 @@ public static class Day11
     {
         // key: valeur sur la pierre
         // value: nb de pierres avec cette valeur
-        var stones = Input.GetInput(sample: false).Split(' ').Select(x => long.Parse(x)).GroupBy(x => x).ToDictionary(x => x.Key, x => (long)x.Count()).ToSortedDictionary();
+        var stones = new Dictionary<long, long>();
+        var nextStones = new Dictionary<long, long>();        
 
-        WriteLine(string.Join(' ', stones));
+        stones.AddRange(Input.GetInput(sample: false).Split(' ').Select(x => long.Parse(x)).GroupBy(x => x).Select(x => (x.Key, (long)x.Count())));
 
         for (var i = 0; i < 75; i++)
         {
             MarkupLine($"Generation [purple]{i}[/] : [lime]{stones.Values.Sum()}[/] ([cyan]{stones.Count}[/] slots)");
-            if (i < 6) WriteLine(string.Join(' ', stones));
+            //if (i < 6) WriteLine(string.Join(' ', stones));
 
-            var nextStones = new SortedDictionary<long, long>();
+            nextStones.Clear();
             foreach ((var number, var count) in stones)
             {
                 (var left, var right) = Blink(number);
@@ -28,7 +29,7 @@ public static class Day11
                     nextStones.AddOrIncrement(right.Value, count);
             }
 
-            stones = nextStones;
+            (nextStones, stones) = (stones, nextStones);
         }
 
         return stones.Values.Sum();
