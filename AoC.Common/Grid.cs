@@ -1,4 +1,7 @@
-﻿interface IGrid
+﻿
+namespace AoC;
+
+public interface IGrid
 {
     bool Contains(Point p);
 }
@@ -6,7 +9,7 @@
 /// <summary>
 /// Represents a grid where values are organized in multiple rows in vertical order from top to bottom, and where each row is constituted of values ordered from left to right.
 /// </summary>
-class Grid<T> : IGrid, IEnumerable<GridCell<T>>
+public sealed class Grid<T> : IGrid, IEnumerable<GridCell<T>>
 {
     private readonly T[] _data;
     private readonly T? _outOfBoundsValue;
@@ -95,13 +98,13 @@ class Grid<T> : IGrid, IEnumerable<GridCell<T>>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
     /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public void VisitConsole(Action<T> visit) => Visit(visit, WriteLine);
+    public void VisitConsole(Action<T> visit) => Visit(visit, SysConsole.WriteLine);
 
     /// <summary>
     /// Visit each value in grid order (left to right then top to bottom) and call the <paramref name="visit"/>.
     /// Calls <see cref="SysConsole.WriteLine"/> at the end of each row.
     /// </summary>
-    public void VisitConsole(Action<Point, T> visit) => Visit(visit, WriteLine);
+    public void VisitConsole(Action<Point, T> visit) => Visit(visit, SysConsole.WriteLine);
 
     public void Visit(Action<T> visit, Action? endOfRow = null) => Visit((p, value) => visit(value), endOfRow);
 
@@ -199,17 +202,4 @@ class Grid<T> : IGrid, IEnumerable<GridCell<T>>
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-}
-
-internal record struct GridCell<T>(Point Point, T Value)
-{
-    public static implicit operator (Point point, T value)(GridCell<T> value)
-    {
-        return (value.Point, value.Value);
-    }
-
-    public static implicit operator GridCell<T>((Point point, T value) value)
-    {
-        return new GridCell<T>(value.point, value.value);
-    }
 }

@@ -1,4 +1,6 @@
-﻿public class ExtensionTests
+﻿namespace AoC;
+
+public class ExtensionTests
 {
     [Fact]
     public void Grid8Direction_Rotate90_Baseline()
