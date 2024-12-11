@@ -50,6 +50,9 @@ public static class DebugConsole
     public static void Write(char c) => SysConsole.Write(c);
 
     [Conditional("DEBUG")]
+    public static void Write(object c) => SysConsole.Write(c);
+
+    [Conditional("DEBUG")]
     public static void Write(int c) => SysConsole.Write(c);
 
     [Conditional("DEBUG")]

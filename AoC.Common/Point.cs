@@ -96,18 +96,3 @@ public readonly struct Point
 
     public override int GetHashCode() => HashCode.Combine(X, Y);
 }
-
-
-[Flags]
-public enum Grid8Direction : byte
-{
-    Undefined = 0,
-    Up = 1,
-    Left = 2,
-    Down = 4,
-    Right = 8,
-    LeftUp = Left | Up,
-    LeftDown = Left | Down,
-    RightDown = Right | Down,
-    RightUp = Right | Up
-}

@@ -14,7 +14,6 @@
     <Using Include="System.Text.RegularExpressions" />
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\AoC.Common\AoC.Common.csproj" />
   </ItemGroup>

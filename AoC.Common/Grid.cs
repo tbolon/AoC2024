@@ -203,3 +203,35 @@ public sealed class Grid<T> : IGrid, IEnumerable<GridCell<T>>
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 }
+
+public static class GridExtensions
+{
+    /// <summary>
+    /// Assumes that each line is composed of the same amount of characters and returns a grid with all lines.
+    /// </summary>
+    public static Grid<char> AsGridOfChars(this IEnumerable<string> lines, char? outOfBoundsValue = default)
+    {
+        var source = (IEnumerable<IEnumerable<char>>)lines;
+        return new Grid<char>(source, outOfBoundsValue ?? '\0');
+    }
+
+    /// <summary>
+    /// Assumes that each line is composed of characters '0' to '9', convert them to an array of bytes and returns a grid with all lines.
+    /// </summary>
+    public static Grid<byte> AsGridOfBytes(this IEnumerable<string> lines, byte? outOfBoundsValue = default) => AsGrid(lines, l => l.Select(c => (byte)(c - '0')), outOfBoundsValue ?? 0);
+
+    /// <summary>
+    /// Converts all lines to a grid, assuming the with of the grid will be based on the number of values returned by the first line.
+    /// </summary>
+    /// <param name="lines">Lines to convert to grid.</param>
+    /// <param name="transform">Function to use to transform each line of text into a collection of values.</param>
+    /// <param name="outOfBoundsValue">
+    /// A specific value to return when out of bounds coordinates are used when calling <see cref="Grid{T}.Item(long,long)"/>.
+    /// Use <see langword="null" /> to raise an <see cref="ArgumentOutOfRangeException"/> when and out of bounds index is used.
+    /// </param>
+    public static Grid<T> AsGrid<T>(this IEnumerable<string> lines, Func<string, IEnumerable<T>> transform, T? outOfBoundsValue = default) => new(lines.Select(l => transform(l)), outOfBoundsValue);
+
+    public static void VisitConsole(this Grid<char> @this) => @this.VisitConsole(c => Write(c));
+
+    public static void VisitConsole(this Grid<char> @this, Func<char, ConsoleColor> getColor) => @this.VisitConsole(c => Write(c, getColor(c)));
+}

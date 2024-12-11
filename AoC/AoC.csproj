@@ -9,25 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="AoC.Tests" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AoC.2021\AoC.2021.csproj" />
     <ProjectReference Include="..\AoC.2023\AoC.2023.csproj" />
     <ProjectReference Include="..\AoC.2024\AoC.2024.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="**\*.sample.txt">
-      <DependentUpon>$([System.String]::Copy('%(FileName)').Split('.')[0]).cs</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 
 </Project>
