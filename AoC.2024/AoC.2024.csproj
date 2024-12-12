@@ -23,6 +23,7 @@
       <DependentUpon>$([System.String]::Copy('%(FileName)').Split('.')[0]).cs</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="*.sample.txt" />
   </ItemGroup>
 
 </Project>

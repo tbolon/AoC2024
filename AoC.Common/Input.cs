@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 
 
 namespace AoC;
@@ -34,18 +35,23 @@ public static partial class Input
 
         if (!Directory.Exists(year.ToString()))
             Directory.CreateDirectory(year.ToString());
-        var filename = $"{year}/Day{day:00}.txt";
-        
+        var filename = $"{year}/Day{day:00}.txt";        
 
         if (sample)
-        {
+        {            
+            // 1) recherche sur le disque
             filename = $"{year}/Day{day:00}.sample.txt";
-            if (File.Exists(filename))
+            if (File.Exists(filename)) return File.ReadAllText(filename);
+
+            // 2) recherche dans l'assembly
+            var assembly = Assembly.Load($"AoC.{year}") ?? throw new NotSupportedException($"Impossible de charger l'assembly AoC.{year}");
+            var stream = assembly.GetManifestResourceStream($"AoC{year}.Day{day:00}.sample.txt") ?? throw new NotSupportedException($"Impossible de charger la ressource AoC{year}.Day{day:00}.sample.txt");
+            using(var reader = new StreamReader(stream))
             {
-                return File.ReadAllText(filename);
+                return reader.ReadToEnd();
             }
 
-            throw new NotSupportedException($"Impossible de charger le fichier exemple s'il n'est pas déjà présent sur le disque. Vous devez créer le fichier {filename} sur le disque avec le contenu de l'exemple");
+            throw new NotSupportedException($"Impossible de charger le fichier exemple s'il n'est pas déjà présent sur le disque ou dans l'assembly. Vous devez créer le fichier {filename} sur le disque avec le contenu de l'exemple");
         }
 
         if (File.Exists(filename))
