@@ -69,7 +69,15 @@ public static class Day13
 
         public (long a, long b) Solve()
         {
-            // b = ((Py*Ax) - (Ay*Px)) / ((By*Ax) - (Ay*Bx))
+            // a * Ax + b * Bx = Px
+            // a * Ay + b * By = Py
+            //
+            // a * Ax + b * Bx = Px
+            // => a = (Px/Ax) - ((Bx/Ax) * b)
+            //
+            // ((Px/Ax) - ((Bx/Ax) * b) * Ay) + (b * By) = Py
+            // => ...
+            // => b = ((Py*Ax) - (Ay*Px)) / ((By*Ax) - (Ay*Bx))
             var t1 = (Prize.Y * BtnA.X) - (BtnA.Y * Prize.X);
             var t2 = (BtnB.Y * BtnA.X) - (BtnA.Y * BtnB.X);
 
