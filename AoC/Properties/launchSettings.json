@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AoC": {
+      "commandName": "Project",
+      "commandLineArgs": "12"
+    }
+  }
+}
