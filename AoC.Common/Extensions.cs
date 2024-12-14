@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 
 namespace AoC;
 
@@ -63,9 +64,9 @@ public static class Extensions
 
 public static class StringExtensions
 {
-    public static int AsInt(this string @this) => int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+    public static int AsInt(this string @this) => int.Parse(@this, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
 
-    public static int? AsIntN(this string? @this) => string.IsNullOrEmpty(@this) ? null : int.Parse(@this, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture);
+    public static int? AsIntN(this string? @this) => string.IsNullOrEmpty(@this) ? null : int.Parse(@this, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
 
     public static string[] SplitSpace(this string @this, bool removeEmptyEntries = true) => @this.Split(' ', removeEmptyEntries ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
 }
